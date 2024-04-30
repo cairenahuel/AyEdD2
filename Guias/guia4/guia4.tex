@@ -105,5 +105,30 @@
         \asegura{res=DOBLECOLA_0.elems\Biggl[\Bigl\lceil{\frac{|DOBLECOLA_0|}{2}}\Bigr\rceil\Biggr]}
     \end{proc}
 \end{tad}
-
+\pagebreak
+\ejercicio{4}{Especifique el TAD DiccionarioConHistoria. El mismo guarda para cada clave, todos los valores que se asociaron con la misma a lo largo del tiempo (en orden)}
+\begin{tad}{DiccionarioConHistoria}
+    \obs{data}{dict<T,\TLista{K}>}
+    \begin{proc}{\nt Vacio}{}{\nt}
+        \asegura{res.data=\{\}}
+    \end{proc}
+    \begin{proc}{estaLaLlave}{\In dic:\nt, \In e: T}{\bool}
+        \asegura{res=true \siiLargo e \in dic.data}
+    \end{proc}
+    \begin{proc}{definir}{\Inout dic: \nt,\In k: T, \In e: K}{}
+        \requiere{DIC_0=dic \yLuego k \in RES_0.data}
+        \asegura{dic.data[k][0]=setKey(DIC_0.data,k,concat(DIC_0.data[k],e))}
+    \end{proc}
+    \begin{proc}{consultarHistorial}{\In dic: \nt, \In k: T}{\TLista{K}}
+        \asegura{res=res.data[k]}
+    \end{proc}
+    \begin{proc}{borrar}{\Inout dic \nt,\In k: T}{}
+        \requiere{dic=DIC_0}
+        \requiere{k\in dic.data}
+        \asegura{dic.data=delKey(DIC_0, k)}
+    \end{proc}
+    \begin{proc}{tamaño}{\In dic: \nt}{\ent}
+        \asegura{res=|dic.data|}
+    \end{proc}
+\end{tad}
 \end{document}
