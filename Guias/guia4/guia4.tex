@@ -107,7 +107,7 @@
 \end{tad}
 \pagebreak
 \ejercicio{4}{Especifique el TAD DiccionarioConHistoria. El mismo guarda para cada clave, todos los valores que se asociaron con la misma a lo largo del tiempo (en orden)}
-\begin{tad}{DiccionarioConHistoria}
+\begin{tad}{DiccionarioConHistoria\<T,\TLista{K}\>}
     \obs{data}{dict<T,\TLista{K}>}
     \begin{proc}{\nt Vacio}{}{\nt}
         \asegura{res.data=\{\}}
@@ -129,6 +129,15 @@
     \end{proc}
     \begin{proc}{tamaño}{\In dic: \nt}{\ent}
         \asegura{res=|dic.data|}
+    \end{proc}
+\end{tad}
+\ejercicio{5}{Modifique el TAD ColaDePrioridad<T> para que, si hay muchos valores iguales al maximo, la operacion desapilarMax los desapile a todos.}
+\begin{tad}{ColaDePrioridad\textless T\textgreater}
+    ---Toda la implementacion normal de \nt ---
+    \begin{proc}{desapilarMax}{\Inout cola:\nt}{\TLista{T}}
+        \requiere{cola=COLA_0}
+        \asegura{\not \exists\ e \in cola.data, \exists e' \in COLA_0.data: tienePriMax(COLA_0.data, e') \yLuego cola.data[e] = COLA_0.data[e']}
+        \asegura{\forall e \in COLA_0.data, (tienePriMax(COLA_0.data, e) \yLuego e \in res)\lor (\lnot tienePriMax(COLA_0.data, e) \yLuego e\not\in res)}
     \end{proc}
 \end{tad}
 \end{document}
