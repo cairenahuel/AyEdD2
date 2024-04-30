@@ -1,26 +1,33 @@
-\usepackage{etoolbox}
 \usepackage{changepage}
 \newcommand{\tbft}[2]{\par\addvspace{\baselineskip}\textbf{#1}\hspace{0.35em}{#2}\\\par\addvspace{\baselineskip}}
+\newcommand{\ejercicio}[2]{\par\addvspace{\baselineskip}\textbf{Ejercicio #1.}\hspace{0.35em}{#2}\\\par\addvspace{\baselineskip}}
+% \ejercicio{NUMERO}{ENUNCIADO}
+%   Devuelve
+% Ejercicio NUMERO. ---- ENUNCIADO ----
+%
+%salto de linea comodo
 \newcommand{\salto}[1]{\par\addvspace{#1}}
-\newcommand{\sii}{\longleftrightarrow}
-\newcommand{\encabezadoTAD}[1]{TAD\ \ \normalfont\ttfamily#1 }
+%
+% si y solo si corto y largo
+\newcommand{\sii}{\leftrightarrow}
+\newcommand{\siiLargo}{\longleftrightarrow}
+%
+% entorno TAD
 \newenvironment{tad}[1]{
-% \newcounter{numObs#1}%
-% \setcounter{numObs#1}{1}
-\salto{1ex}\par\noindent\encabezadoTAD{#1}\{
+%
+%   constructor del encabezado formateado
+\newcommand{\encabezadoTAD}[1]{\salto{1ex}\par\noindent TAD\ \ \normalfont\ttfamily#1 }
+%
+\encabezadoTAD{#1}\{
     \begin{adjustwidth}{3em}{0em}
-    \newcommand{\obs}[3]{\par\noindent{\ttfamily obs} ##1: ##2\par
-    % \csdef{\newcommand}{##1}{\roman{numObs#1}}
-    % \csdef{\newcommand}{##1}{\expandonce{\roman{numObs#1}}}
-    % \stepcounter{numObs#1}}
-    % \expandafter\newcommand\csname ##3 \endcsname{##1}
-    % \def\newcommand\roman{numObs#1}{##1}
-
-    }
+    \newcommand{\obs}[2]{\par\noindent{\ttfamily obs} ##1: ##2\par}
     \newcommand{\nombretad}{{\ttfamily#1}}}
-        {\end{adjustwidth}\par\}}
-% \begin{tad}{nombre del tad}{parametros}
+{\end{adjustwidth}\par\}}
+% \begin{tad}{nombre del tad}
 %   AGREGAR UN OBSERVADOR
 %     \obs{nombre observador}{tipo}
 %     \nombretad <---------- DEVUELVE EL NOMBRE DEL TAD (du)
+%
+%   y aca se pueden usar todos los procs y cosas de la catedra
+%
 %     \end{tad}

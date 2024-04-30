@@ -8,8 +8,8 @@
 \section*{Especificacion de TADs}
 \tbft{Ejercicio 1}{Especificar en forma completa el TAD \texttt{NumeroRacional} que incluya al menos las operaciones aritmeticas basicas}
 \begin{tad}{NumeroRacional}
-    \obs{n}{\ent}{a}
-    \obs{d}{\ent}{b}
+    \obs{n}{\ent}
+    \obs{d}{\ent}
     \begin{proc}{suma}{\In a,b: \nombretad}{\nombretad}
         \requiere{true}
         \asegura{res=\frac{a.n*b.d+a.d*b.n}{b.d*a.d}}
@@ -33,18 +33,55 @@
     \item Esfera (3D)
 \end{itemize}
 \begin{tad}{Rectangulo}
-    \obs{alto}{\float}{a}
-    \obs{ancho}{\float}{b}
-    \obs{posicion}{$\langle\float\times\float\rangle$}{c}
+    \obs{alto}{\float}
+    \obs{ancho}{\float}
+    \obs{posicion}{$\langle\float\times\float\rangle$}
+    \obs{angulo}{\float}
     \begin{proc}{nuevo\nombretad}{\In h: \float, \In w: float, \In x:\float,\In y:\float}{\nombretad}
         \requiere{w \geq 0 \land h \geq 0}
-        \asegura{res.ancho=w \land res.alto=h \land res.posicion=(x,y)}
+        \asegura{res.ancho=w \land res.alto=h \land res.posicion=(x,y) \land r.angulo=0}
     \end{proc}
     \begin{proc}{escalar}{\Inout r: \nombretad, mh:\float, mw:\float}{}
+        \requiere{r=R_0}
         \asegura{(mw\geq0 \land mh \geq0) \yLuego r.posicion=R_0.posicion }
-        \asegura{r.alto=R_0.alto*mh \land r.ancho=R_0.ancho*mw}
+        \asegura{r.alto=|R_0.alto*mh| \land r.ancho=|R_0.ancho*mw|}
         \asegura{mw<0 \yLuego r.posicion_1=R_0.posicion_1+R_0.ancho*mw}
         \asegura{mh<0 \yLuego r.posicion_2=R_0.posicion_2+R_0.alto*mh}
+    \end{proc}
+    \begin{proc}{rotar}{\Inout r: \nombretad, \In rad: \float}{}
+        \requiere{r=R_0}
+        \asegura{r.angulo=R_0.angulo+rad}
+    \end{proc}
+    \begin{proc}{trasladar}{\Inout r: \nombretad, \In pos: $\langle x,y\rangle$}{}
+        \requiere{r=R_0}
+        \asegura{r.posicion=R_0.posicion+pos}
+    \end{proc}
+    \begin{proc}{area}{\In r: \nombretad}{\float}
+        \asegura{res=r.alto \cdot r.ancho}        
+    \end{proc}
+\end{tad}
+\pagebreak
+\begin{tad}{Esfera}
+    \obs{radio}{\float}
+    \obs{centro}{$\langle \float\times\float\times\float \rangle$}
+    %\vspace*{0.5em}
+    %\noindent Por claridad de notacion $centro_x$, $centro_y$ y $centro_z$ seran\\usadas en lugar de sus variantes con numero.
+    \obs{semieje}{$\langle \float\times\float\times\float \rangle$}
+    \begin{proc}{nueva\nombretad}{\In r: \float, \In pos:$\langle \float\times\float\times\float \rangle$}{\nombretad}
+        \asegura{res.radio={|r|}}
+        \asegura{res.centro=pos}
+    \end{proc}
+    \begin{proc}{escalar}{\Inout esfera: \nombretad, \In e: \float}{}
+        \requiere{esfera=esfera_0}
+        \asegura{esfera.radio=ESFERA_0.radio*|e|}
+    \end{proc}
+    \begin{proc}{trasladar}{\Inout esfera: \nombretad, \In pos:$\langle x,y,z\rangle$}{}
+        \requiere{esfera=ESFERA_0}
+        \asegura{esfera.centro=ESFERA_0.centro+pos}
+    \end{proc}
+    \begin{proc}{rotar}{\Inout esfera: \nombretad, \In angulosrad: $\langle \alpha,\beta,\gamma \rangle$}{}
+        \requiere{esfera=ESFERA_0}
+        \asegura{esfera.semieje=ESFERA_0.semieje+angulosrad}
     \end{proc}
 \end{tad}
 \end{document}
