@@ -57,7 +57,7 @@
         \asegura{r.posicion=R_0.posicion+pos}
     \end{proc}
     \begin{proc}{area}{\In r: \nombretad}{\float}
-        \asegura{res=r.alto \cdot r.ancho}        
+        \asegura{res=r.alto \cdot r.ancho}
     \end{proc}
 \end{tad}
 \pagebreak
@@ -137,7 +137,12 @@
     \begin{proc}{desapilarMax}{\Inout cola:\nt}{\TLista{T}}
         \requiere{cola=COLA_0}
         \asegura{\not \exists\ e \in cola.data, \exists e' \in COLA_0.data: tienePriMax(COLA_0.data, e') \yLuego cola.data[e] = COLA_0.data[e']}
-        \asegura{\forall e \in COLA_0.data, (tienePriMax(COLA_0.data, e) \yLuego e \in res)\lor (\lnot tienePriMax(COLA_0.data, e) \yLuego e\not\in res)}
+        \asegura{(\forall e \in COLA_0.data)\ (tienePriMax(COLA_0.data, e) \yLuego e \in res)\lor\\ (\lnot tienePriMax(COLA_0.data, e) \yLuego e\not\in res)}
+        {\color{red}\asegura{|res|=|COLA_0|-|cola|}}
     \end{proc}
 \end{tad}
+\\\texttt{\color{red}No estoy seguro de si se puede usar el operando $\in$ con diccionarios, ni si estoy asegurando que TODOS los 
+elementos que saco de la cola sean incluidos en la sequencia de resultado, por ejemplo si tengo dos elementos en la cola con el 
+mismo nombre y la misma prioridad, ambos van a la secuencia con la definicion que di? creo que no, que como uno ya pertenece el otro 
+no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la secuencia puede ser una opcion valida?}
 \end{document}
