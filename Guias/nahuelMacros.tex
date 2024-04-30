@@ -11,17 +11,14 @@
 % si y solo si corto y largo
 \newcommand{\sii}{\leftrightarrow}
 \newcommand{\siiLargo}{\longleftrightarrow}
-%
-% entorno TAD
+\newcommand{\slr}[1]{\ensuremath{\langle #1\rangle}}
+\newcommand{\encabezadoTAD}[1]{\par\salto{1ex}\noindent TAD\ \ \normalfont\ttfamily#1 }
 \newenvironment{tad}[1]{
-%
-%   constructor del encabezado formateado
-\newcommand{\encabezadoTAD}[1]{\salto{1ex}\par\noindent TAD\ \ \normalfont\ttfamily#1 }
-%
+\newcommand{\nombretad}{{\ttfamily#1}}
+\newcommand{\nt}{\nombretad}
+\newcommand{\obs}[2]{\par\noindent{\ttfamily obs} ##1: ##2\par}
 \encabezadoTAD{#1}\{
-    \begin{adjustwidth}{3em}{0em}
-    \newcommand{\obs}[2]{\par\noindent{\ttfamily obs} ##1: ##2\par}
-    \newcommand{\nombretad}{{\ttfamily#1}}}
+    \begin{adjustwidth}{3em}{0em}}
 {\end{adjustwidth}\par\}}
 % \begin{tad}{nombre del tad}
 %   AGREGAR UN OBSERVADOR

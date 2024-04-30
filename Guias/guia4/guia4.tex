@@ -2,8 +2,8 @@
 \usepackage{tabularx}
 \usepackage{amssymb}
 \usepackage{enumitem}
-\include{../AEDmacros.tex}
-\include{../nahuelMacros.tex}
+\input{../AEDmacros.tex}
+\input{../nahuelMacros.tex}
 \begin{document}
 \section*{Especificacion de TADs}
 \tbft{Ejercicio 1}{Especificar en forma completa el TAD \texttt{NumeroRacional} que incluya al menos las operaciones aritmeticas basicas}
@@ -84,4 +84,26 @@
         \asegura{esfera.semieje=ESFERA_0.semieje+angulosrad}
     \end{proc}
 \end{tad}
+\ejercicio{3}{Especifique el TAD DobleCola\slr{T}, en el que los elementos pueden insertarse al principio o al final y se eliminan por el medio.}
+\begin{tad}{DobleCola}
+    \obs{elems}{\TLista{T}}
+    \begin{proc}{\nombretad Vacia}{}{\nt}
+        \asegura{res=\slr{}}
+    \end{proc}
+    \begin{proc}{encolarFinal}{\Inout doblecola: \nt, \In e: T}{}
+        \requiere{doblecola=DOBLECOLA_0}
+        \asegura{doblecola.elems=concat(DOBLECOLA_0.elems, \langle e\rangle)}
+    \end{proc}
+    \begin{proc}{encolarInicio}{\Inout doblecola: \nt, \In e: T}{}
+        \requiere{doblecola=DOBLECOLA_0}
+        \asegura{doblecola.elems=concat(\langle e\rangle,DOBLECOLA_0.elems)}
+    \end{proc}
+    \begin{proc}{desencolar}{\Inout doblecola: \nt}{T}
+        \requiere{doblecola=DOBLECOLA_0}
+        \requiere{cola.elems\not=\slr{}}
+        \asegura{res\not \in doblecola.elems}
+        \asegura{res=DOBLECOLA_0.elems\Biggl[\Bigl\lceil{\frac{|DOBLECOLA_0|}{2}}\Bigr\rceil\Biggr]}
+    \end{proc}
+\end{tad}
+
 \end{document}
