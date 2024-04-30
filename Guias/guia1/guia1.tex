@@ -1,0 +1,205 @@
+\documentclass[10pt,a4paper,2in]{article}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\include{../AEDmacros.tex}
+\include{../nahuelMacros.tex}
+\begin{document}
+\section{Repaso Lógica Proposicional}
+\hfill\\
+\textbf{Ejercicio 1: }Determinar los valores de verdad de las siguientes proposiciones cuando el valor de verdad de a, b y c es verdadero y el de x e y es falso.\\
+\begin{tabularx}{\textwidth}{|lX|c||lX|c|}
+\hline
+a)&$(\lnot x\lor b) $&$ True$& e) &$(\lnot(c\lor y))\leftrightarrow(\lnot c\land \lnot y)$&$True$\\
+b)&$((c\lor (y\land a))\lor b)$&$ True$ & f)&$((c\lor y)\land(a\lor b))$&$True$\\
+c)&$\lnot (c\lor y))$&$False$& g)&$((c\lor y)\land(a\lor b))\leftrightarrow (c\lor (y\land a)\lor b)$&$True$\\
+d)&$\lnot(y\lor c)$&$False$&h) &$(\lnot c\land \lnot y)$&$False$\\
+\hline
+\end{tabularx}
+\tbft{Ejercicio 2: }{Considere la siguiente oración: “Si es mi cumpleaños o hay torta, entonces hay torta”.}
+\begin{itemize}
+\item Escribir usando lógica proposicional y realizar la tabla de verdad
+\item Asumiendo que la oración es verdadera y hay una torta, qué se puede concluir?
+\item Asumiendo que la oración es verdadera y no hay una torta, qué se puede concluir?
+\item Suponiendo que la oración es mentira (es falsa), se puede concluir algo?
+\end{itemize}
+\texttt{p: Es mi cumpleaños q: Hay torta}\\
+$p\lor q \implies q$\\
+\par\addvspace{\baselineskip}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+p&q&$p\lor q \implies q$\\
+V&V&V\\
+V&F&V\\
+F&V&V\\
+F&F&V\\
+\hline
+\end{tabular}\\
+\end{center}
+\par\addvspace{\baselineskip}
+\texttt{\\Si asumimos que la oración es verdadera y hay torta puede o no ser su cumpleaños.\\
+Si asumimos que la oración es falsa y no hay una torta, llegamos a un absurdo y por lo tanto la oración es verdadera.\\
+La oración siempre es verdadera por lo tanto no se puede concluir nada.\\
+(No estoy del todo seguro de eso ultimo.}
+\tbft{Ejercicio 3:}{* Usando reglas de equivalencia (conmutatividad, asociatividad, De Morgan, etc) determinar si los siguientes pares de fórmulas son equivalencias. Indicar en cada paso qué regla se utilizó.}
+\begin{enumerate}[label=\alph*]
+\item $(p\lor q)\land (p \lor r)$ y $\lnot p \implies (q\land r)$
+\\Distributiva $\rightarrow p\lor (q\land r)$ y $\lnot p \implies (q\land r)$
+\\Implicacion $\rightarrow p\lor (q\land r)$ y $\lnot(\lnot p) \lor (q\land r)$
+\\Simplificando $\rightarrow p\lor (q\land r)$ y $p \lor (q\land r)$
+\\$\therefore$ ambas expreciones son equivalentes.
+\item $\lnot(\lnot p)\implies (\lnot(\lnot p\land \lnot q))$ y q
+\\Negacion de una negacion y D'Morgan $\rightarrow p \implies  (p \lor q)$
+\\Implicacion $\rightarrow \lnot p \lor ( p\lor q)$
+\\Asociando y complementando $\rightarrow True \lor q$
+\\Dominacion $\rightarrow True$
+\\$\therefore$ $q\not\equiv True$
+\item $((True\land p)\land(\lnot p \lor False))\implies \lnot(\lnot p \lor q)$ y $p\land \lnot q$
+\\Implicacion y simplificando $\rightarrow \lnot((True\land p)\land(\lnot p \lor False))\lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Simplificando $\rightarrow (\lnot(True\land p)\lor \lnot(\lnot p \lor False))\lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Simplificando $\rightarrow ((False\lor \lnot p)\lor (p \land True))\lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Complejizando $\rightarrow ((((False\lor \lnot p) \lor p) \land ((False\lor \lnot p) \lor True)))\lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Asociando y complementando $\rightarrow ((((False\lor True) \land ((False\lor \lnot p) \lor True)))\lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Dominacion $\rightarrow ((((True) \land ((True)))\lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Dominacion $\rightarrow (True) \lor (p \land \lnot q)$ y $p\land \lnot q$
+\\Dominacion $\rightarrow True$ y $p\land \lnot q$
+\\$\therefore True \not\equiv p\land \lnot q$
+\\Hay un paso mal (me olvide de que $True \land p \equiv p$) y bueno cosas, termina siendo False pero sigue siendo $\not\equiv$.
+\item $(p \lor (\lnot p \land q))$ y $\lnot p \implies q$
+\\Distribuyendo $\rightarrow (p\lor \lnot p)\land(p\lor q$) y $\lnot p \implies q$
+\\Complemento  $\rightarrow (True)\land(p\lor q)$ y $\lnot (\lnot p) \lor q$
+\\Identidad y doble negacion $\rightarrow p\lor q$ y $p \lor q$
+\\$\therefore$ $(p \lor (\lnot p \land q))\equiv (\lnot p \implies q)$
+\item $p\implies(q\land \lnot(q\implies r))$ y $(\lnot p \lor q)\land(\lnot p\lor (q\land \lnot r))$
+\\ Implicacion $\rightarrow p \implies (q\land \lnot(\lnot q \lor r))$ y $\lnot p \lor (q\land (q\land \lnot r)$
+\\ Idempotencia y negacion $\rightarrow p \implies (q\land \lnot r)$ y $\lnot p \lor (q \land \lnot r)$
+\\ Implicacion $\rightarrow p \implies (q\land \lnot r)$ y $p \implies (q \land \lnot r)$
+\\ $\therefore (p \lor (\lnot p \land q)) \equiv \lnot p \implies q$
+\end{enumerate}
+\tbft{Ejercicio 4:}{}
+\begin{tabularx}{\linewidth}{X|X}
+    \begin{equation}
+        \begin{gathered}
+            (p\lor \lnot p)\\
+            \True\\
+            \text{Tautologia}
+        \end{gathered}
+    \end{equation}
+    &
+    \begin{equation}
+        \begin{gathered}
+            (p \land \lnot p)\\
+            \False\\
+            \text{Contradiccion}
+        \end{gathered}
+    \end{equation}\\
+    \begin{equation}
+        \begin{gathered}
+            ((\lnot p \lor q) \iff (p\implies q))\\
+            ((\lnot p \lor q) \iff (\lnot p\lor q))\\
+            \text{Contingencia}
+        \end{gathered}
+    \end{equation}
+    &
+    \begin{equation}
+        \begin{gathered}
+            ((p\land q)\implies p)\\
+            \lnot(p\land q)\lor p\\
+            \lnot p \lor \lnot q \lor p\\
+            q\\
+            \text{Contingencia}
+        \end{gathered}
+    \end{equation}\\
+    \begin{equation}
+        \begin{gathered}
+            ((\lnot p \lor q)\iff (p\implies q))\\
+            ((\lnot p \lor q)\iff (\lnot p \lor q))\\
+            \text{Tautologia}
+        \end{gathered}
+    \end{equation}
+    &
+    \begin{equation}
+        \begin{gathered}
+            ((p\rightarrow(q\rightarrow r))\rightarrow ((p\rightarrow q)\rightarrow (p\rightarrow r)))\\
+            (\lnot p \lor \lnot q \lor r) \rightarrow ((\lnot p \lor q)\rightarrow (\lnot p \lor r))\\
+            \lnot (p\land q\land \lnot r )\lor (p\land \lnot q)\lor (\lnot p \lor r)\\
+            (\lnot p\lor \lnot q\lor r )\lor ((p\lor \lnot p)\land (\lnot p \lor \lnot q)\lor r)\\
+            (\lnot p\lor \lnot q\lor r )\lor ((\True)\land (\lnot p \lor \lnot q)\lor r)\\
+            (\lnot p\lor \lnot q\lor r )\lor ((\lnot p \lor \lnot q)\lor r)\\
+            (\lnot p \lor \lnot q\lor r)\\
+            q\land p \implies r
+            \\\text{Contingencia}
+            \\\text{\small(creo)}
+        \end{gathered}
+    \end{equation}
+\end{tabularx}
+\tbft{\\Ejercicio 7:}{Sean p, q y r tres variables de las que se sabe que\\
+- p y q nunca estan indefinidas,\\
+- r sii q es verdadera\\
+Proponer una fórmula que nunca se indefina, utilizando siempre las tres variables y que sea verdadera si y solo si se cumple que:}
+\begin{tabularx}{\linewidth}{XX}
+        \texttt{a) Al menos una es verdadera.} & \texttt{d) Sólo p y q son verdaderas}\\
+        \texttt{b) Ninguna es verdadera.} & \texttt{e) No todas al mismo tiempo son verdaderas.}\\
+        \texttt{c) Exactamente una de las tres es verdadera.} & \texttt{f) r es verdadera.}\\
+\end{tabularx}
+\begin{equation*}
+    a\longrightarrow p\lor_L q \lor_L r
+\end{equation*}
+\begin{equation*}
+    b\longrightarrow p\land_L q \land_L r
+\end{equation*}
+\begin{equation*}
+    c\longrightarrow p\lor_L q \lor_L r
+\end{equation*}
+\begin{equation*}
+    d\longrightarrow (p\land_L q) \lor_L r
+\end{equation*}
+\begin{equation*}
+    e\longrightarrow p\lor_L q \lor_L r
+\end{equation*}
+\begin{equation*}
+    f\longrightarrow r\lor_L q \lor_L p
+\end{equation*}
+\pagebreak\\
+\tbft{Ejercicio 8}{*Determinar, para cada aparición de variables, si dicha aparición se encuentra libre o ligada. En caso de estar
+ligada, aclarar a qué cuantificador lo está. En los casos en que sea posible, proponer valores para las variables libres de modo
+tal que las expresiones sean verdaderas.\\}
+\begin{equation*}
+    \paraTodo[unalinea]{x}{\ent}{0\leq x < n \implies x+y=z}
+\end{equation*}
+\texttt{x es una variable ligada y tambien libre, {n,y,z} son todas libres}
+
+\begin{equation*}
+    \paraTodo[unalinea]{x,y}{\ent}{0\leq x < n \land 0\leq y < m \implies x+y=z}
+\end{equation*}
+\texttt{{x,y} son variables ligadas y tambien libres, {n,m,z} son todas libres}
+\begin{equation*}
+    \paraTodo[unalinea]{j}{\ent}{0\leq j < 10 \implies j<0}
+\end{equation*}
+\texttt{j es una variable ligada y libre}
+\begin{equation*}
+    \paraTodo[unalinea]{j}{\ent}{(0\leq j \implies P(j))\land P(j)}
+\end{equation*}
+\texttt{j es una variable ligada y tambien libre}
+
+\tbft{Ejercicio 9:}{* Sea P (x : $\ent$) y Q(x : $\ent$) dos predicados cualquiera. Explicar cuál es el error de traducción a fórmulas\\
+de los siguientes enunciados. Dar un ejemplo en el cuál sucede el problema y luego corregirlo.}
+\begin{itemize}
+    \item "Todos los naturales menos a 10 cumplen p"\\
+\begin{equation*}
+    \paraTodo[unalinea]{i}{\nat}{0\leq i<10 \land P(i)}
+\end{equation*}
+\texttt{El cero no es un natural por lo que la traduccion deberia ser $0<i<10$}
+    \item ".Algun natural menor a 10 cumple p"
+\begin{equation*}
+    \existe[unalinea]{i}{\ent}{0\leq i < 10 \implies P(i)}
+\end{equation*}
+\texttt{Al igual que el anterior i deberia ser un $\nat$ pero es $\ent$ y da lugar a que se indefina la proposion}
+\item "Todos los naturales menores a 10 que cumplen p, cumplen q"
+\begin{equation*}
+    \paraTodo[unalinea]{x}{\ent}{0\leq x < 10 \implies P(x) \land Q(x)}
+\end{equation*}
+\end{itemize}
+
+\end{document}

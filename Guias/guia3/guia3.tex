@@ -1,0 +1,209 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
+\usepackage{ragged2e}
+\include{../AEDmacros.tex}
+\include{../nahuelMacros.tex}
+\begin{document}
+\section*{Precondicion mas debil en smalllang}
+\tbft{Ejercicio 1:}{Calcular las siguientes expresiones, donde a,b son variables reales, i una variable entera y A es una secuencia de reales.}
+\begin{tabularx}{\textwidth}{XX}
+    a) def($a+1$)&d) def($A[i]+1$)\\
+    b) def($a/b$)&e) def($A[i+2]$)\\
+    c) def($\sqrt{a/b}$)&f) def($0\leq i \leq |A| \yLuego A[i]\geq 0$)
+\end{tabularx}
+\texttt{\color{red}a) true
+\\b) $b\not=0$
+\\c) $b\not=0\yLuego \frac{a}{b}\geq 0$
+\\d) $0\leq i < |A|$
+\\e) $-2\leq i < |A|-2$
+\\f) $0\leq i \leq |A| \yLuego A[i]\geq 0$}
+\tbft{Ejercicio 2:}{Calcular las siguientes precondiciones mas debiles, donde a,b son variables reales, i una variable entera y A es una secuencia de reales}
+\begin{itemize}
+    \item wp($a:=a+1; b:=a/2, b\geq 0$)
+    \begin{equation*}
+        \begin{gathered}
+            wp(a:=a+1, wp(b:= a/2, b\geq 0))\\
+            wp(b:= a/2, b\geq 0)\equiv def(a/2)\land a/2\geq 0\\
+            true\land a\geq 0\\
+\\
+            wp(a:=a+1, a\geq 0)\equiv def(a+1) \land a+1\geq0\\
+            true\land a\geq -1
+        \end{gathered}
+    \end{equation*}
+    \item $wp(a:=A[i]+1; b:=a*a, b\not=2)\equiv wp(a:=A[i]+1,wp(b:=a*a,b\not=2))$
+    \begin{equation*}
+        \begin{gathered}
+            wp(a:=A[i]+1,wp(b:=a*a,b\not=2))\\
+            wp(b:=a*a,b\not=2)\equiv def(a*a)\land a*a\not=2\\
+            true\land a*a\not=2
+            \\
+            wp(a:=A[i]+1, a*a\not=2)\\
+            def(A[i]+1)\land A[i]+1*A[i]+1\not=2\\
+            0\leq i < |A| \yLuego A[i]+1*A[i]+1\not=2\\
+            0\leq i < |A| \yLuego |A[i]+1|\not=\sqrt{2}\\
+            0\leq i < |A| \yLuego A[i]+1\not=\sqrt{2}\land -(A[i]+1)\not=\sqrt{2}\\
+            0\leq i < |A| \yLuego A[i]\not=\sqrt{2}-1\land A[i]\not=-(\sqrt{2}+1)
+        \end{gathered}
+    \end{equation*}
+    \item $wp(a:=A[i]+1;a:=b*b, a\geq 0)$
+    \begin{equation*}
+        \begin{gathered}
+            wp(a:=A[i]+1;wp(a:=b*b,a\geq 0))\\
+            def(b*b)\land b*b\geq 0\\
+            true\\
+            \\
+            wp(a:=A[i]+1,true)\equiv def(A[i]+1)\land true\\
+            0\leq i < |A|
+        \end{gathered}
+    \end{equation*}
+    \item $wp(a:= a-b; b:=a+b,a\geq 0 \land b\geq 0)$
+    \begin{equation*}
+        \begin{gathered}
+            wp(a:= a-b, wp(b:=a+b,a\geq 0 \land b\geq 0))\\
+            wp(b:=a+b,a\geq 0 \land b\geq 0)\equiv def(a+b)\land a\geq0 \land a+b\geq 0\\
+            a\geq0 \land a+b\geq 0
+            \\
+            wp(a:= a-b, a\geq0 \land a+b\geq 0)\equiv def(a-b)\land  a-b\geq0 \land a-b+b\geq 0\\
+            a-b\geq 0 \land a\geq 0\\
+            a\geq b \land a\geq 0
+        \end{gathered}
+    \end{equation*}
+\end{itemize}
+\pagebreak
+\tbft{Ejercicio 3}{Sea $Q\equiv\paraTodo[unalinea]{j}{\ent}{0\leq j < |A| \implicaLuego A[j]\geq 0}$. Calcular las siguientes precondiciones mas debiles, donde i es una variable entera y A es una secuencia de enteros.}
+\begin{itemize}
+    \item $wp(A[i]:=0,Q)$
+    \begin{equation*}
+        \color{red}
+        \begin{gathered}
+            wp(A[i]:=0,\paraTodo[unalinea]{j}{\ent}{0\leq j < |A| \implicaLuego A[j]\geq 0})\\
+            \equiv def(setAt(A,i,0)) \yLuego Q_{setAt(A,i,0)}^A\\
+            \equiv 0\leq i < |A| \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < |setAt(A,i,0)| \implicaLuego setAt(A,i,0)[j]\geq 0}\\
+            \\
+            \forall j \in \ent,0\leq j <|A|\yLuego A[j]\not= A[i] \yLuego A[j]\geq 0\ ?
+            \\\text{es practicamente lo mismo, deberia dejarlo como queda?}
+        \end{gathered}
+    \end{equation*}
+    \item $wp(A[i+2]:=-1,Q)$
+    \begin{equation*}
+        \color{red}
+        \begin{gathered}
+            wp(A[i+2]:=-1,Q)\\
+            \equiv def(setAt(A,i+2,-1))\yLuego Q_{setAt(A,i+2,-1)}^A\\
+            \equiv 0\leq i+2 < |A| \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < |setAt(A,i+2,-1| \implicaLuego setAt(A,i+2,-1)[j]\geq 0}\\
+            \equiv -2\leq i < |A|-2 \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < |setAt(A,i+2,-1| \implicaLuego setAt(A,i+2,-1)[j]\geq 0}
+            \\\text{¿Queda asi? raro. j=i+2 no es una falso eterno? contradiccion?}
+        \end{gathered}
+    \end{equation*}
+    \item $wp(A[i]:=A[i-1],Q)$
+    \begin{equation*}
+        \color{red}
+        \begin{gathered}
+            wp(A:=setAt(A,i,A[i-1]),Q)\\
+            \equiv def(setAt(A,i,A[i-1]))\yLuego Q_{setAt(A,i,A[i-1])}^A\\
+            \equiv (def(A)\land def(i)\yLuego (0\leq i < |A|))\yLuego def(A[i-1])\yLuego Q_{setAt(A,i,A[i-1])}^A\\
+            \equiv ((0\leq i < |A|)\yLuego (0\leq i-1<|A|))\yLuego Q_{setAt(A,i,A[i-1])}^A\\
+            \equiv ((0\leq i < |A|)\yLuego (1\leq i<|A|+1))\yLuego Q_{setAt(A,i,A[i-1])}^A\\
+            \equiv (1\leq i<|A|+1)\yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < |setAt(A,i,A[i-1])| \implicaLuego setAt(A,i,A[i-1])[j]\geq 0}\\
+            %\equiv (1\leq i<|A|+1)\yLuego \paraTodo[unalinea]{j}{\ent}{0> j \geq |setAt(A,i,A[i-1])| \lor setAt(A,i,A[i-1])[j]\geq 0}\\
+            %\equiv (1\leq i<|A|+1)\yLuego \paraTodo[unalinea]{j}{\ent}{setAt(A,i,A[i-1])[j]\geq 0}\\
+            \equiv (1\leq i<|A|+1)\yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < |A|)\implicaLuego((i=j\land |A-1|\geq 0)\lor (i\not=j \land A[j]\geq 0))}\\
+            \equiv (1\leq i<|A|+1)\yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < |A| \land i\not=j)\implicaLuego(A[j]\geq 0)}\\
+            \text{Creo que este si esta bien. (al final termine borrando la mitad y intentando descifrar el resuelto de clase)}
+        \end{gathered}
+    \end{equation*}
+\end{itemize}
+\tbft{Ejercicio 4:}{Para los siguientes pares de programas S y precondiciones Q}
+\begin{itemize}
+    \item Escribir la precondicion mas debil P=wp(S,Q)
+    \item Mostrar formalmente que la P elegida es correcta
+\end{itemize}
+\begin{tabularx}{\textwidth}{XX}
+        \raggedleft$S \equiv$&
+    \begin{algorithm*}[H]
+        \eIf{$a<0$}{b:=a}{b:=-a}
+    \end{algorithm*}
+\end{tabularx}
+\centering $Q\equiv (b=-|a|)$\\\raggedright
+\begin{equation*}
+    \color{red}
+    \begin{gathered}
+        wp(S,Q)\equiv (a<0 \land a=-|a|)\lor (a\geq0 \land -a=-|a|)\\
+        \equiv (a<0 \lor a\geq 0)\equiv true\\
+        \text{Entonces mi P=wp(S,Q)=true}\\
+        \text{no se como demostrar formalmente que es correcta :p}
+    \end{gathered}
+\end{equation*}
+\tbft{Ejercicio 5}{Para las siguientes especificaciones}
+\begin{itemize}
+    \item Poner nombre al problema que resuelven
+    \item Escribir un programa S sencillo en SmallLang, sin ciclos, que lo resuelva
+    \item Dar la precondicion mas debil del programa escrito con respecto a la postcondicion de su especificacion {\color{red} y mi codigo supongo}
+\end{itemize}
+\begin{proc}{\color{red}sumaElSiguiente}{\In s: \TLista{\ent},\Inout a: \ent}{}
+    \requiere{0\leq i < |s| \yLuego a=\sum_{j_0}^{i-1}s[j]}
+    \asegura{a=\sum_{j=0}^{i}s[j]}
+\end{proc}
+\begin{algorithm*}[H]
+    $a:=A_0+s[i]$;\
+    \BlankLine
+    $wp(S,Q), S\equiv a:=A_0+s[i], Q\equiv a=\sum_{j=0}^{i}s[j]$\\
+    $def(A_0+s[i])\land A_0+s[i]=\sum_{j=0}^{i}s[j]$\\
+    $def(A_0)+s[i])\land A_0=\sum_{j=0}^{i-1}s[j]$\\
+    $true\land 0\leq i <|s| \yLuego A_0=\sum_{j=0}^{i-1}s[j]$\\
+    $0\leq i <|s| \yLuego A_0=\sum_{j=0}^{i-1}s[j]$
+\end{algorithm*}
+\begin{proc}{\color{red}todosPositivosHasta}{\In s: \TLista{\ent}, \In i: \ent}{\bool}
+    \requiere{0\leq i < |s| \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < i \implicaLuego s[j] \geq 0}}
+    \asegura{res=true \sii \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego s[j]\geq 0}}
+\end{proc}
+\begin{algorithm*}
+    $s[i]:=1$
+    \BlankLine
+    $wp(s:=setAt(s,i,1), res=true \sii \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego s[j]\geq 0})$
+    \\$def(setAt(s,i,1))\yLuego res=true \sii \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0} $
+    \\$0\leq i < |s| \yLuego res=true \sii \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0} $
+    \\demostrando el $\implies$
+    \\$0\leq i < |s| \yLuego res=true \implica \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0} $
+    \\$0\leq i < |s| \yLuego res=false \lor \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0} $
+    \\$0\leq i < |s| \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0} $
+    \\demostrando el $\impliedby$
+    \\$0\leq i < |s| \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0 \implica res=true} $
+    \\$0\leq i < |s| \yLuego \lnot(\paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0) \lor res=true} $
+    \\$0\leq i < |s| \yLuego (\existe[unalinea]{j}{\ent}{\lnot(0\leq j \leq i \implicaLuego setAt(s,i,1)[j]\geq 0)) \lor res=true} $
+    \\$0\leq i < |s| \yLuego (\existe[unalinea]{j}{\ent}{\lnot(\lnot(0\leq j \leq i) \lor setAt(s,i,1)[j]\geq 0)) \lor res=true} $
+    \\$0\leq i < |s| \yLuego (\existe[unalinea]{j}{\ent}{(0\leq j \leq i) \land setAt(s,i,1)[j]<0) \lor res=true} $
+    \\$0\leq i < |s| \yLuego \cdots {\color{red}\text{el valor de verdad de esta afirmacion no me aporta nada(creo)}} \cdots \lor res=true $
+    \\$0\leq i < |s| \yLuego res=true $
+    \\{\color{red}\text{estoy muy confundido :(}}
+    \\{\color{red}\text{porque me quedo un res=true en un requiere??}}
+
+    % $s[i]:=x$
+    % \BlankLine
+    % $wp(s:=setAt(s,i,x), res=true \sii \paraTodo[unalinea]{j}{\ent}{0\leq j\leq i \implicaLuego s[j]\geq 0})$\\
+    % $def(setAt(s,i,x)\land res=true \sii \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,x)[j]\geq 0})$\\
+    % $0\leq i < |s|\yLuego (res=true\sii \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implicaLuego setAt(s,i,x)[j]\geq 0}))$
+\end{algorithm*}
+\begin{proc}{\color{red}iesimoFibonacci}{\Inout s: \TLista{\ent}, in i: \ent}{}
+    \requiere{(0\leq i < |s| )\yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j < i \implica s[j]=fibonacci(j)}}
+    \asegura{\paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implica s[j]=fibonacci(j)}}
+\end{proc}
+\begin{algorithm*}
+    $s[i]:=s[i-1]+s[i-2]$
+    \BlankLine
+    $wp(s[i]:=s[i-1]+s[i-2], \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implica s[j]=fibonacci(j)})$
+    $wp(s:=setAt(s,i,s[i-1]+s[i-2]), \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implica s[j]=fibonacci(j)})$
+    $0\leq i < |s| \yLuego def(s[i-1]+s[i-2]) \land \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implica setAt(s,i,s[i-1]+s[i-2])[j]=fibonacci(j)}$
+    $0\leq i < |s| \yLuego \paraTodo[unalinea]{j}{\ent}{0\leq j \leq i \implica setAt(s,i,s[i-1]+s[i-2])[j]=fibonacci(j)}$
+    $\text{\color{red}no me sale aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}$
+\end{algorithm*}
+
+el seis lo hice en papel y capaz algun dia lo paso pero por ahora solo voy a poner las respuestas:\\
+a- no es correcto pues no tiene en cuenta que los i no multiplos de 3\\
+b- no es correcto pues no tiene encuentra los i multiplos de 3\\
+c- no se puede dar un contra ejemplo porque tiene una condicion demasiado restrictiva\\
+e- obviando los posibles problemas de rango con un $|s|/2$, la precondicion no contempla los i divisibles por dos que pueden cumplir la poscondicion. Por ejemplo i=2
+\end{document}

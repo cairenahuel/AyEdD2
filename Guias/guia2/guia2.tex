@@ -1,0 +1,307 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\include{../AEDmacros.tex}
+\include{../nahuelMacros.tex}
+\begin{document}
+\section*{Especificacion de problemas}
+\tbft{Ejercicio 1:}{Nombrar los siguientes predicados sobre enteros.}
+\pred{\color{red}esCuadradoEntero}{x:\ent}{\existe[unalinea]{c}{\ent}{c>0 \land (c*c=x)}}
+\salto{\baselineskip}
+\pred{\color{red}esPrimo}{x:\ent}{(x>1)\land \paraTodo[unalinea]{n}{\ent}{(1<n<x) \rightarrow_L (x\ mod\ n \not = 0)}}
+\tbft{Ejercicio 3:}{Escriba los siguientes predicados sobre numeros enteros en lenguaje de especificacion.}
+\pred{sonCoprimos}{x,y : \ent}{\paraTodo[unalinea]{n}{\nat}{1<n<max\{x,y\}\yLuego esPrimo(n)\yLuego \lnot ((x\ mod\ n\ =\ 0 )\iff (y\ mod\ n\ =\ 0 ))}}
+\pred{mayorPrimoQueDivide}{x:\ent,y:\ent}{\existe[unalinea]{!\ n}{\ent}{y\leq n < x \yLuego esPrimo(n) \yLuego x mod n = 0 \yLuego n=y}}
+\tbft{Ejercicio 3:}{Nombre los siguientes predicados auxiliares sobre secuencias de enteros.}
+\pred{\color{red}todosPositivos}{s: \TLista{\ent}}{
+\paraTodo[unalinea]{i}{\ent}{0\leq i < |s|\rightarrow_L s[i]\geq 0}
+}
+\pred{\color{red}todosDistintos}{s: \TLista{\ent}}{
+    \paraTodo[unalinea]{i}{\ent}{(0\leq i < |s|)\rightarrow_L \paraTodo[unalinea]{j}{\ent}{0\leq j < |s| \land i\not = j \rightarrow_L (s[i]\not = s[j])}}
+}
+\tbft{Ejercicio 4:}{Escriba los siguientes predicados auxiliares sobre secuencias de enteros, aclarando los tipos de los parametros que recibe.}
+\begin{enumerate}
+    \item $esPrefijo$, que determina si una secuencia es prefijo de otra.\\
+\pred{esPrefijo}{s1: \TLista{\ent}, s2\TLista{\ent}}{|s1|\leq |s2| \yLuego \paraTodo[unalinea]{i}{\ent}{0\leq i < |s1| \yLuego s1[i]=s2[i]}}
+    \item $estaOrdenada$, que determina si la secuencia se encuentra ordenada de menor a mayor.\\
+\pred{estáOrdenada}{s: \TLista{\ent}}{
+    \paraTodo[unalinea]{n}{\ent}{0\leq n <(|s|-1) \yLuego (s[n]\leq s[n+1])}
+}
+    \item $hayUnParQueDivideAlResto$, que determina si hay un elemento par en la secuencia que dividie a todos los otros elementos de la secuencia.\\
+\pred{hayUnParQueDivideAlResto}{s:\TLista{\ent}}{
+    \existe[unalinea]{n}{\ent}{(s[n]\ mod\ 2 = 0 \yLuego \paraTodo[unalinea]{i}{\ent}{0\leq i < |s| \yLuego s[i]\ mod\ s[n]=0})}
+}
+    \item \color{red}\large PENDIENTE 4.d \small se ve divertido
+\end{enumerate}
+\pagebreak
+\section*{Analisis de especificacion}
+\tbft{Ejercicio 6:}{Las siguientes especificaciones no son correctas. Indicar por que y corregirlas de modo que describan correctamente el problema}
+\tbft{\texttt{progresionGeometricaFactor2:}}{Indica si la secuencia l representa una progresion geometrica factor 2. Es decir, si cada elemento de la secuencia es el doble del elemento anterior.}
+\begin{proc}{progresionGeometricaFactor2}{\In l: \TLista{\ent}}{\bool}
+    \requiere{\True}
+    \asegura{res=\True \sii (\paraTodo[unalinea]{i}{\ent}{0\leq i<|l| \implicaLuego l[i]=2*l[i-1]})}
+\end{proc}
+\salto{\baselineskip}
+\texttt{\color{red}El problema es el rango de la secuencia, en i=0 al hacer l[0]=2*l[0-1] salimos del rango en el que la secuencia esta definida.\\
+Una posible solucion es cambiar el rango a $0<i\leq |l|$}\\
+\begin{proc}{progresionGeometricaFactor2}{\In l: \TLista{\ent}}{\bool}
+    \requiere{\True}
+    \asegura{res=\True \sii (\paraTodo[unalinea]{i}{\ent}{0< i\leq|l| \implicaLuego l[i]=2*l[i-1]})}
+\end{proc}
+\tbft{minimo:}{Devuelve en $res$ el menor elemento de l.}
+\begin{proc}{minimo}{\In l: \TLista{\ent}}{\ent}
+    \requiere{\True}
+    \asegura{\paraTodo[unalinea]{y}{\ent}{(y\in l \land y\not = x)\implica y>res}}
+\end{proc}
+\salto{\baselineskip}
+\texttt{\color{red}La variable x no significa nada y tiene que ser reemplazada por res, y falta asegurar que res es un elemento de l, y cambiar el > por $\geq$}\\
+\begin{proc}{minimo}{\In l: \TLista{\ent}}{\ent}
+    \requiere{\True}
+    \asegura{res\in l}
+    \asegura{\paraTodo[unalinea]{y}{\ent}{(y\in l \land y\not = res)\implica y\geq res}}
+\end{proc}
+\texttt{\color{blue}Ejercicio 8: la primera no puede ser porque requiere ambos casos a la vez, la segunda me parece mejor que la tercera y la cuarta, asi que si busco simpleza iria por la segunda si busco legibilidad de la especificacion iria por la cuarta.}
+\tbft{Ejercicio 9:}{Considerar la siguiente especificación, junto con un algoritmo que dado x devuelve $x^2$ .}
+\begin{proc}{unoMasGrande}{\In x: \float}{\float}
+    \requiere{\True}
+    \asegura{res>x}
+\end{proc}
+\texttt{¿Qué devuelve el algoritmo si recibe x = 3? ¿El resultado hace verdadera la postcondición de unoMasGrande?\\
+\color{red}Con x=3 el algoritmo devuelve 9, y este resultado hace verdadera la postcondiciónpues 3<9\\}
+\salto{\baselineskip}
+\texttt{¿Qué sucede para las entradas x = 0,5, x = 1, x = -0,2 y x = -7?\\
+\color{red}$f(0.5)=0.25 \land f(1)=1 \land f(-0.2)== 0.04 \land f(-7)=49$}
+\salto{\baselineskip}
+\texttt{Teniendo en cuenta lo respondido en los puntos anteriores, escribir una precondición para unoMasGrande, de manera tal
+que el algoritmo cumpla con la especificación\\}
+\begin{proc}{unoMasGrande}{\In x: \float}{\float}
+    \requiere{\color{red}x<0 \lor x>1}
+    \asegura{res>x}
+\end{proc}
+\section*{Relación de fuerza}
+\tbft{Ejercicio 10:}{Sean x y r variables de tipo $\mathbb{R}$. Considerar los siguientes predicados:}
+\begin{tabularx}{\textwidth}{XX}
+    P1: \{$x\leq 0$\} & Q1: \{$r\geq x^2$\}\\
+    P2: \{$x\leq 10$\} & Q2: \{$r\geq 0$\}\\
+    P3: \{$x\leq -10$\} & Q3: \{$r = x^2$\}\\
+\end{tabularx}
+\salto{\baselineskip}
+Indicar la relacion de fuerza entre P1, P2 y P3\\
+{\color{red}$P2 \subset P1 \subset P3$}
+\salto{\baselineskip}
+Indicar la relacion de fuerza entre Q1, Q2 y Q3\\
+{\color{red}$Q2 \subset Q1 \subset Q3$}
+\salto{\baselineskip}
+Escribir dos programas que cumplan con la siguiente especificacion:
+\begin{proc}{hagoAlgo}{\In x:\float}{\float}
+    \requiere{x\geq 0}
+    \asegura{res\geq x^2}
+\end{proc}
+\color{red}{\texttt{
+    \\$result=x*x$
+}\\
+\texttt{
+    $result=(x*x)+4$
+}}\\
+\texttt{{\color{red}a- si
+\\b- si
+\\c- si
+\\d- no necesariamente
+\\e- si
+\\f- no necesariamente
+\\
+\\Hay requieres y aseguras mas fuertes que otros, para que sea seguro reemplazar una pre y/o postcondición de forma segura creo que hay que hacerlo por alguna mas fuerte que abarque mas casos.
+}}
+\color{black}
+\tbft{Ejercicio 11:}{Considerar las siguientes dos especificaciones, junto con un algoritmo $a$ que satisface la especificacion de p2}
+\begin{proc}{p1}{\In x:\ent, \In n:\ent}{\ent}
+    \requiere{x\not = 0}
+    \asegura{x^n-1<res\leq x^n}
+\end{proc}
+\begin{proc}{p2}{\In x:\ent, \In n:\ent}{\ent}
+    \requiere{n\leq 0\implica x\not = 0}
+    \asegura{res= \lfloor x^n\rfloor}
+\end{proc}
+Dados valores de x y n que hacen verdadera la precondición de p1, demostrar que hacen también verdadera la precondición
+de p2.\\
+{\color{red}
+\begin{equation*}
+    \begin{gathered}
+        x\not = 0 \implica (n\leq 0 \implica x \not = 0)\\
+        x\not = 0 \implica (\lnot (n\leq 0) \lor (x \not = 0))\\
+        \lnot(x\not = 0) \lor (n>0) \lor (x \not = 0)\\
+        (x=0) \lor (n>0) \lor (x \not = 0)\\
+        (n>0) \lor True\\
+        True
+    \end{gathered}
+\end{equation*}
+\\Por lo tanto queda demostrado que $x\not = 0 \implica (n\leq 0 \implica x \not = 0)$
+}
+\salto{\baselineskip}
+Ahora, dados estos valores de x y n, supongamos que se ejecuta a: llegamos a un valor de res que hace verdadera la
+postcondición de p2. ¿Será también verdadera la postcondición de p1 con este valor de res?
+\texttt{\color{red}\\Si porque la funcion floor esta contenida en $x-1<\lfloor x\rfloor \leq x$}
+\\¿Podemos concluir que a satisface la especiﬁcación de p1?
+\texttt{\color{red}\\Podemos concluir que el algoritmo satisface ambas especificaciones.}
+\pagebreak
+\section*{Especificacion de problemas}
+\tbft{Ejercicio 12:}{Especificar los siguientes problemas.}
+Dado un entero decidir si es par.
+\begin{proc}{esPar}{\In x:\ent}{\bool}
+    \requiere{\True}
+    \asegura{x\ mod\ 2 = 0}
+\end{proc}
+Dado un entero n y otro m, decidir si n es un multiplo de m
+\begin{proc}{esMultiplo}{\In n: \ent, \In m: \ent}{\bool}
+    \requiere{\True}
+    \asegura{res=\True \sii \existe[unalinea]{k}{\ent}{k*n=m}}
+\end{proc}
+Dado un entero, listar todos sus divisores positivos.
+\begin{proc}{listaDivisores}{\In x: \ent}{\TLista{\ent}}
+\requiere{\True}
+\asegura{\paraTodo[unalinea]{n}{\ent}{1\leq n \leq x \yLuego divideA(n,x) \yLuego n \in res}}
+\end{proc}
+\pred{divideA}{n:\ent,m:\ent}{m\ mod\ n = 0}
+Dado un entero positivo, obtener su descomposici´on en factores primos. Devolver una secuencia de tuplas (p, e), donde p es
+un factor primo y e es su exponente, ordenada en forma creciente con respecto a p
+\pred{esPrimo}{n: \nat}{\not \exists m \in \{2,3,\cdots,n-2,n-1\} | divideA(m,n) = 0}
+\pred{ordenada}{s: \TLista{\nat \times \nat}}{\paraTodo[unalinea]{i}{\ent}{0\leq i < |s|-1 \yLuego s[i]_1 < s[i+1]_1 }}
+\begin{proc}{descomponerEnPrimos}{\In n: \nat}{\TLista{\ent \times \ent}}
+    \requiere{\True}
+    \asegura{(\paraTodo[unalinea]{i}{\ent}{0\leq i < |res| \yLuego esPrimo(res[i]_1) \yLuego res[i]_2\geq 0)\yLuego \prod_{j=0}^{|res-1|}res[j]_1^{res[j]_2}=n \yLuego estaOrdenada(res)}}
+\end{proc}
+\tbft{Ejercicio 13:}{Especificar los siguientes problemas sobre secuencias.}
+Dadas dos secuencias s y t decidir si s está incluida en t, es decir si todos los elementos de s aparecen en t en igual o mayor cantidad.
+\begin{proc}{incluidaEn}{\In s: \TLista{T}, \In t: \TLista{T}}{\bool}
+    \requiere{\True}
+    \asegura{|t|<|s|\yLuego res=\False}
+    \asegura{|s|=0\yLuego res=\True}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i<|t|\yLuego \#(t,s[i])\geq \#(s,s[i])}\yLuego res=\True}
+\end{proc}
+Dadas dos secuencias s y t devolver su interseccion, es decir, una secuencia con todos los elementos que aparecen en ambas. Si un mismo elemento tiene repetidos, la secuencia retornada debe devolver la cantidad minima de apariciones del elemento en s y en t.
+\begin{proc}{interseccion}{\In s:\TLista{T}, \In t:\TLista{T}}{\TLista{T}}
+    \requiere{\True}
+    \asegura{res\not = \langle \rangle \sii \existe[unalinea]{e}{T}{e\in s \land e\in t}}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i < |res| \yLuego \#(res, res[i])=minimo(\#(s, res[i]),\#(t, res[i]))}}
+\end{proc}
+Dada una secuencia de numeros enteros devolver aquel que divida a mas elementos de la secuencia. El elemento tiene que pertenecer a la secuencia original. Si existen mas de un elemento que cumplen esa propiedad devolver alguno de ellos.
+\begin{proc}{divideAMas}{\In l: \TLista{\ent}}{\TLista{\ent}}
+    \requiere{\exists n \in l : n\not = 0}
+    \asegura{\exists n \in l : esElQueMasDivide(n,l) \yLuego res = n}
+\end{proc}
+\pred{esElQueMasDivide}{n: \ent, s: \TLista{\ent}}{
+    \forall\ m \in s, \sum_{j=0}^{|s|-1}\IfThenElse{s[j]\ mod\ m=0}{1}{0} \leq \sum_{j=0}^{|s|-1}\IfThenElse{s[j]\ mod\ n=0}{1}{0}}
+Dada una secuencia de secuencias de enteros l, devolver una secuencia de l que contenga el maximo valor.
+\begin{proc}{secuenciaDelMaximo}{\In l: \TLista{\TLista{\ent}}}{\TLista{\ent}}
+    \requiere{\True}
+    \asegura{\existe[unalinea]{m, i}{\ent}{0\leq i < |l| \yLuego m\in l[i] \yLuego \forall secuencia \in l, esMayorQueTodos(m, secuencia)}\yLuego res=l[i]}
+\end{proc}
+\pred{esMayorQueTodos}{n: \ent, l: \TLista{\ent}}{\forall valor \in l, n\geq valor}
+\begin{proc}{partes}{\In l: \TLista{T}}{\TLista{\TLista{T}}}
+    \requiere{res=\langle\rangle \sii |l|=0}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i < |l| \yLuego \paraTodo[unalinea]{k}{\ent}{0\leq k<|l|-i}\yLuego \sum_{j=0}^{i} \langle l[k+j] \rangle \in res}}
+\end{proc}
+\section*{Especificacion con parametros inout}
+\tbft{Ejercicio 14:}{Dados dos enteros a y b, se necesita calcular su suma y retornarla en un entero c, ¿cual de las siguientes especificaciones son correctas para el este problema? Para las que no lo son indicar por qué.}
+\begin{proc}{sumar}{\Inout a,b,c: \ent}{}
+    \requiere{\True}
+    \asegura{a+b=c}
+\end{proc}
+{\texttt{\color{red}incorrecta pues no tiene sentido que todos los parametros sean inout}}
+\salto{\baselineskip}
+\begin{proc}{sumar}{\In a,b: \ent, \Inout c: \ent}{}
+    \requiere{\True}
+    \asegura{c=a+b}
+\end{proc}
+{\texttt{\color{red}Esta es la correcta. El valor previo de c no es requerido asi hay que hacer $C_0=c$}}
+\salto{\baselineskip}
+\begin{proc}{sumar}{\Inout a,b: \ent, \Inout c: \ent}{}
+    \requiere{a=A_0 \land b=B_0}
+    \asegura{c=a+b}
+\end{proc}
+{\texttt{\color{red}no tiene sentido que a y b sean inout y el requiere}}
+\salto{\baselineskip}
+\begin{proc}{sumar}{\Inout a,b: \ent, \Inout c: \ent}{}
+    \requiere{a=A_0 \land b=B_0}
+    \asegura{a=A_0 \land b=B_0 \land c=a+b}
+\end{proc}
+{\texttt{\color{red}no tiene sentido que a y b sean inout y el requiere}}
+\tbft{Ejercicio 15:}{Dada una secuencia l, se desea sacar su primer elemento y devolverlo. Decidir cuales de estas especificaciones son correctas. Para las que no lo son, indicar por que y justificar con ejemplos.}
+\begin{proc}{tomarPrimero}{\Inout l: \TLista{\float}}{\float}
+    \requiere{|l|>0}
+    \asegura{res=head(l)}
+\end{proc}
+\texttt{\color{red}Incorrecto pues no asegura que el resto de la secuencia se mantiene igual.}
+\begin{proc}{tomarPrimero}{\Inout l: \TLista{\float}}{\float}
+    \requiere{|l|>0 \land l=L_0}
+    \asegura{res=head(L_0)}
+\end{proc}
+\texttt{\color{red}Incorrecto pues l se mantiene con su primer elemento.}
+\begin{proc}{tomarPrimero}{\Inout l: \TLista{\float}}{\float}
+    \requiere{|l|>0}
+    \asegura{res=head(L_0)\land |l|=|L_0|-1}
+\end{proc}
+\texttt{\color{red}Incorrecto pues puede ser que devolvamos la head pero que a la lista le falte cualquier otro elemento.}
+\pagebreak
+\begin{proc}{tomarPrimero}{\Inout l: \TLista{\float}}{\float}
+    \requiere{|l|>0\land l=L_0}
+    \asegura{res=head(L_0)\land l=tail(L_0)}
+\end{proc}
+\texttt{\color{red}Correcta pues aseguramos que l es la secuencia original sin la cabeza y retornamos la cabeza.}
+\tbft{Ejercicio 16:}{Dada una secuencia de enteros se requiere multiplicar por 2 aquellos valores que se encuentran en posiciones pares. Indicar por qué son incorrectas las siguientes especificaciones y proponer una alternativa.}
+\begin{proc}{duplicarPares}{\Inout l: \TLista{\ent}}{}
+    \requiere{l=L_0}
+    \asegura{|l|=|L_0|\land \paraTodo[unalinea]{i}{\ent}{0\leq i < |l| \land i\ mod\ 2=0 \implicaLuego l[i]=2*L_0[i]}}
+\end{proc}
+\texttt{\color{red}Parece correcta}
+\begin{proc}{duplicarPares}{\Inout l: \TLista{\ent}}{}
+    \requiere{l=L_0}
+    \asegura{
+        \paraTodo[unalinea]{i}{\ent}{0\leq i < |l| \land i\ mod\ 2\not = 0\implicaLuego l[i]=L_0[i]}\land\\
+        \paraTodo[unalinea]{i}{\ent}{0\leq i < |l| \land i\ mod\ 2 = 0\implicaLuego l[i]=2 * L_0[i]}
+    }
+\end{proc}
+\texttt{\color{red}Redundancia al aclarar que los indices impares son iguales.}
+\begin{proc}{duplicarPares}{\Inout l: \TLista{\ent}}{\TLista{\ent}}
+    \requiere{\True}
+    \asegura{|l|=|res|
+    \\\cdots\\
+    \cdots}
+\end{proc}
+\texttt{\color{red}No usas el parametro inout y simplemente explusas una lista que hace lo que queres, pero no modificas correctamente la secuencia original.}
+\tbft{Ejercicio 17:}{Especificar los siguientes problemas de modificacion de secuencias:}
+\texttt{proc primosHermanos(inout l: \TLista{\ent})}, que dada una secuencia de enteros mayores a dos, reemplaza dichos valores por el numero primo menor mas cercano.
+{\color{red}\begin{proc}{primosHermanos}{\Inout l: \TLista{\ent}}{}
+    \requiere{todosMayoresA2(l)}
+    \requiere{|l|>0}
+    \requiere{l=L_0}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i < |l|\yLuego esElPrimoMenorMasCercano(l[i], L_0[i])}}
+\end{proc}
+\pred{esElPrimoMenorMasCercano}{candidato: \nat, numero: \nat}{
+    esPrimo(candidato)\yLuego \not \exists\ p \in \nat : candidato<p<numero \land esPrimo(p)
+}
+\pred{todosMayoresA2}{l: \TLista{\ent}}{
+    \forall n \in l, n>2
+}}
+\salto{\baselineskip}
+\texttt{proc reemplazar (inout l:\TLista{char}, in a,b : char)} que reemplaza todas las apariciones de a en l por b
+{\color{red}\begin{proc}{reemplazar}{\Inout l:\TLista{char}, \In a,b : char}{}
+    \requiere{l=L_0}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i < |l|\yLuego L_0[i]=a \yLuego l[i]=b}}
+\end{proc}}
+    \salto{\baselineskip}
+\pagebreak
+\texttt{proc limpiarDuplicados(inout l : \TLista{char}, out dup : \TLista{char})}, que elimina todos los elementos duplicados de l dejando solo su primera aparicion (en el orden original). Devuelve ademas, dup una secuencia con todas las apariciones eliminadas (en cualquier orden).
+{\color{red}\begin{proc}{limpiarDuplicados}{\Inout l: \TLista{char},\Out dup: \TLista{char}}{}
+    \requiere{\True}
+    \requiere{l=L_0}
+    \requiere{dup=\langle\rangle}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i <|L_0| \yLuego L_0[i]\in l \land \#(L_0[i],l)=1\yLuego estaOrdenada(l,L_0)}}
+    \asegura{\paraTodo[unalinea]{i}{\ent}{0\leq i <|l|\yLuego \#(dup, l[i])=\#(L_0, l[i])-1}}
+\end{proc}
+\pred{estaOrdenada}{l: \TLista{char}, l0: \TLista{char}}{
+    \paraTodo[unalinea]{i}{\ent}{0\leq i < |l| \yLuego 
+    \\\existe[unalinea]{!\ k}{\ent}{0\leq k < |s0|\yLuego l[i]=l0[k] \yLuego (\not\exists\ e\in \ent:0\leq e < l0[k] \yLuego l0[e]=l[i])}}
+    }}
+    \end{document}
