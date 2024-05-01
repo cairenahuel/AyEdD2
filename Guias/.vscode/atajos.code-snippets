@@ -17,7 +17,7 @@
 	// }
 	"Nuevo proc":{
 		"scope":"latex",
-		"prefix":"proc",
+		"prefix":["proc","\\proc"],
 		"body":[
 			"\\begin{proc}{Nombre}{Parametros}{Resultado}",
 			"    \\requiere{true}",
@@ -28,12 +28,12 @@
 	},
 	"Nuevo tad":{
 		"scope":"latex",
-		"prefix":"tad",
+		"prefix":["\\tad","tad"],
 		"body":[
 			"\\begin{tad}{Nombre}",
 			"    \\obs{}{}",
 			"\\end{tad}"
 		],
-		"description": "ALGO2 - Crea un nuevo ambiente de proc"
+		"description": "ALGO2 - Crea un nuevo ambiente de tad"
 	}
 }

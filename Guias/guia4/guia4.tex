@@ -165,6 +165,7 @@ no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la se
     {\color{red}---Se puede hacer siquiera esto? Otro observador con otro conjunto de tuplas
      y apariciones? raro}
 \end{tad}
+\salto{\baselineskip}
 \begin{tad}{Conjunto\smm{T}}
     \obs{pertenece}{\bool}
     \obs{largo}{\ent}
@@ -199,7 +200,7 @@ no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la se
         \\\asegura{res=c.largo}
     \end{proc}
 \end{tad}
-\pagebreak
+\salto{\baselineskip}
 \begin{tad}{Pila\smm{T}}
     \obs{elems}{dict\smm{\nat,T}}
     \begin{proc}{pilaVacia}{}{\nt}
@@ -214,6 +215,7 @@ no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la se
         \requiere{pila=PILA_0}
         \asegura{|PILA_0.elems|+1=|pila.elems| \land |pila.elems|\in pila.elems \yLuego setKey(pila.elems, |pila.elems|, e)}
     \end{proc}
+    \pagebreak
     \begin{proc}{desapilar}{\Inout pila: \nt}{T}
         \requiere{pila=PILA_0}
         \requiere{pila.elems\not=\{\}}
@@ -225,6 +227,7 @@ no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la se
         \asegura{res=pila.elems\big[|pila.elems|-1\big]}
     \end{proc}
 \end{tad}
+\salto{\baselineskip}
 \begin{tad}{Punto}
     \obs{coords}{\slr{\float \times \float}}
     \pred{igualdad}{p1, p2: \nt}{(\exists k \in \ent: p1.coords_2=p2.coords_2+2k\pi)\land(p1.coords_1=p2.coords_1)}
@@ -248,10 +251,57 @@ no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la se
              \requiere{true}
              \asegura{res.elems=\{\}}
          \end{proc}
-         \begin{proc}{Nombre}{Parametros}{Resultado}
-             \requiere{true}
-             \asegura{true}
+         \begin{proc}{agregar}{\Inout mc: \nt, \In e: T}{}
+             \requiere{mc=MC_0}
+             \asegura{e\in MC_0.elems \yLuego mc.elems[e]=MC_0.elems[e]+1}
+             \asegura{e\not\in MC_0.elems \yLuego setKey(mc,e,1)}
          \end{proc}
+         \begin{proc}{eliminar}{\Inout mc: \nt}{}
+             \requiere{mc=MC_0}
+             \asegura{e\in MC_0.elems \yLuego MC_0.elems[e]=1 \yLuego mc.elems=delKey(MC_0,e)}
+             \asegura{e\in M_0.elems \yLuego MC_0.elems[e]>1 \yLuego mc.elems=setKey(MC_0,e,MC_0.elems[e]-1)}
+         \end{proc}
+         \begin{proc}{multiplicidad}{\In mc: \nt, \In e: T}{\ent}
+             \requiere{true}
+             \asegura{e \in mc \yLuego res=mc.elems[e]}
+             \asegura{e\not\in mc \yLuego res=0}
+         \end{proc}
+         \rojo{--- Hay mas operaciones pero creo que estas son las mas relevantes}
      \end{tad}
-\end{itemize}
+     \pagebreak
+     \item Multidict\smm{K,V}: Misma idea pero para diccionarios, cada clave puede estar asociada a multiples valores. Los valores se definen de a uno, 
+     pero la operacion obtener debe devolver todos los valores asociados a una determinada clave.\\ 
+     \rojo{\\Sobre la nota(que no copie): una posible implementacion que se me ocurre es la de un taller en el que las keys son los operarios y 
+     los values son listas en las que estan los trabajos pendientes que le corresponden a cada uno, en una implementacion mas completa se 
+     podria hacer procs para mover los trabajos de la cola (porque la secuencia va a ser basicamente una cola en su comportamiento default) 
+     pero que tambien se pueda elegir trabajos especificos que hacer para darles prioridad.}
+     \begin{tad}{Multidict\smm{K,V}}
+         \obs{elems}{dict\smm{K,\TLista{V}}}
+         \begin{proc}{multidictVacio}{}{\nt}
+             \requiere{true}
+             \asegura{res.elems=\{\}}
+         \end{proc}
+         \begin{proc}{agregar}{\Inout md: \nt, \In k: K, \In v: V}{}
+             \requiere{md=MD_0}
+             \asegura{k\in MD_0.elems \yLuego setKey(md.elems, k, concat(\slr{v},MD_0.elems[k]))}
+             \asegura{k\not\in MD_0.elems \yLuego setKey(md.elems, k, \slr{v})}
+         \end{proc}
+         \begin{proc}{borrar}{\Inout md: \nt, \In k: K}{}
+             \requiere{md=MD_0}
+             \asegura{k\not\in MD_0 \yLuego md=MD_0}
+             \asegura{k\in MD_0.elems \land |MD_0.elems|=1 \yLuego delKey(md.elems, k)}
+             \asegura{k\in MD_0.elems \land |MD_0.elems|>0 \yLuego\\\hspace*{4.5em}setKey(md.elems, k, subseq(MD_0.elems, 1, |MD_0.elems|[k]))}
+         \end{proc}
+         \rojo{--- Creo que el resto de la implementacion es trivial, podria agregarse un booleando como parametro de borrar que determine si
+          se borra la key completamente o si se borra valor a valor}
+     \end{tad}
+    \end{itemize}
+\ejercicio{8}{Especifique el TAD contadores que, dada una lista de eventos, permite contar la cantidad de veces que se produjo cada uno de ellos.
+La lista de eventos es fija. El TAD debe tener una operacion para incrementar el contador asociado a un evento y una operacion para conocer 
+el valor actual del contador de dicho evento.\\
+\hspace*{2em}-Modifique el TAD para que sea posible guardar el valor del contador en un determinado momento del pasado. Si necesita conocer la fecha 
+y hora actual puede pasarla como parametro a los procedimientos. Asuma que las dechas son numeros enteros (por ejemplo la cantidad de segundos desde el 1ro de enero del '70)}
+\begin{tad}{Contadores}
+    \obs{elems}{dict\smm{T,\ent}}
+\end{tad}
 \end{document}
