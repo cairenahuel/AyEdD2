@@ -138,11 +138,120 @@
         \requiere{cola=COLA_0}
         \asegura{\not \exists\ e \in cola.data, \exists e' \in COLA_0.data: tienePriMax(COLA_0.data, e') \yLuego cola.data[e] = COLA_0.data[e']}
         \asegura{(\forall e \in COLA_0.data)\ (tienePriMax(COLA_0.data, e) \yLuego e \in res)\lor\\ (\lnot tienePriMax(COLA_0.data, e) \yLuego e\not\in res)}
-        {\color{red}\asegura{|res|=|COLA_0|-|cola|}}
+        {\color{red}\asegura{|res|=|COLA_0.data|-|cola.data|}}
     \end{proc}
 \end{tad}
 \\\texttt{\color{red}No estoy seguro de si se puede usar el operando $\in$ con diccionarios, ni si estoy asegurando que TODOS los 
 elementos que saco de la cola sean incluidos en la sequencia de resultado, por ejemplo si tengo dos elementos en la cola con el 
 mismo nombre y la misma prioridad, ambos van a la secuencia con la definicion que di? creo que no, que como uno ya pertenece el otro 
 no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la secuencia puede ser una opcion valida?}
+\ejercicio{6}{Especifique los TADS indicados a continuacion pero utilizando los observadores propuestos}
+\begin{itemize}
+    \item Diccionario\smm{K,V} observando con conjuntos (de tuplas)
+    \item Conjunto\smm{T} observando con funciones
+    \item Pila\smm{T} observando con diccionarios
+    \item Punto observando con coordenadas polares
+\end{itemize}
+\pagebreak
+\begin{tad}{Diccionario\smm{K,V}}
+    \obs{datos}{conj\slr{K\times V}}
+    \begin{proc}{diccionarioVacio}{}{\nt}
+        \asegura{res.datos=\{\}}
+    \end{proc}
+    \begin{proc}{agregar}{\Inout dic: \nt, \In k: K, \In v: V}{}
+        \requiere{dic=DIC_0}
+        \asegura{(k,v) \in dic.datos}
+    \end{proc}
+    {\color{red}---Se puede hacer siquiera esto? Otro observador con otro conjunto de tuplas
+     y apariciones? raro}
+\end{tad}
+\begin{tad}{Conjunto\smm{T}}
+    \obs{pertenece}{\bool}
+    \obs{largo}{\ent}
+    \begin{proc}{conjVacio}{}{\nt}
+        \requiere{true}
+        \asegura{res.largo=0}
+    \end{proc}
+    \begin{proc}{agregar}{\Inout c: \nt, \In e: T}{}
+        \requiere{c=C_0}
+        \asegura{c.pertenece(e)}
+    \end{proc}
+    \begin{proc}{sacar}{\Inout c: \nt, \In e: T}{}
+        \requiere{c=C_0}
+        \asegura{\lnot c.pertenece(e)}
+    \end{proc} 
+    \begin{proc}{unir}{\Inout c: \nt, \In c': \nt}{}
+        \requiere{c=C_0}
+        \asegura{\forall e \in T, c'.pertenece(e): c.pertenece(e)}
+    \end{proc}
+    \begin{proc}{restar}{\Inout c: \nt, \In c': \nt}{}
+        \requiere{c=C_0}
+        \asegura{\forall e \in T, c'.pertenece(e): \lnot c.pertenece(e)}
+    \end{proc}
+    \begin{proc}{intersecar}{\Inout c: \nt, \In c': \nt}{}
+        \requiere{c=C_0}
+        \asegura{\forall e \in T, C_0.pertenece(e) \land c'.pertenece(e) \sii c.pertenece(e)}
+    \end{proc}
+    \begin{proc}{tamaño}{\In c: \nt}{\nat}
+        \requiere{true}
+        \asegura{\exists! m \in \ent: \sum_{i=1}^{m}\IfThenElse{c.pertenece(e)}{1}{0}=res, e\in T}
+        {\color{red} --- acá cree el observador largo porque muchas cosas raras tenia que hacer}
+        \\\asegura{res=c.largo}
+    \end{proc}
+\end{tad}
+\pagebreak
+\begin{tad}{Pila\smm{T}}
+    \obs{elems}{dict\smm{\nat,T}}
+    \begin{proc}{pilaVacia}{}{\nt}
+        \requiere{true}
+        \asegura{res.elems=\{\}}
+    \end{proc}
+    \begin{proc}{vacia}{\In pila: \nt}{\bool}
+        \requiere{true}
+        \asegura{res=true\sii pila.elems=\{\}}
+    \end{proc}
+    \begin{proc}{apilar}{\Inout pila: \nt, \In e: T}{}
+        \requiere{pila=PILA_0}
+        \asegura{|PILA_0.elems|+1=|pila.elems| \land |pila.elems|\in pila.elems \yLuego setKey(pila.elems, |pila.elems|, e)}
+    \end{proc}
+    \begin{proc}{desapilar}{\Inout pila: \nt}{T}
+        \requiere{pila=PILA_0}
+        \requiere{pila.elems\not=\{\}}
+        \asegura{|pila.elems|=|PILA_0.elems|-1\land |PILA_0.elems|\not\in pila.elems}
+        \asegura{res=PILA_0.elems\big[|PILA_0.elems|\big]}
+    \end{proc}
+    \begin{proc}{tope}{\In pila: \nt}{T}
+        \requiere{pila.elems\not=\{\}}
+        \asegura{res=pila.elems\big[|pila.elems|-1\big]}
+    \end{proc}
+\end{tad}
+\begin{tad}{Punto}
+    \obs{coords}{\slr{\float \times \float}}
+    \pred{igualdad}{p1, p2: \nt}{(\exists k \in \ent: p1.coords_2=p2.coords_2+2k\pi)\land(p1.coords_1=p2.coords_1)}
+    \begin{proc}{crearPunto}{\In r: \float, \In $\alpha$: \float}{\nt}
+        \requiere{r\geq0}
+        \asegura{res.coords=(r,\alpha)}
+    \end{proc}
+    \begin{proc}{mover}{\Inout p: \nt, \In newcoords: \slr{\float\times\float}}{}
+        \requiere{true}
+        \asegura{p.coords_1=newcoords_1\land p.coords_2=newcoords_2}
+    \end{proc}
+\end{tad}
+\ejercicio{7}{Especificar TADs para las siguientes estructuras:}
+\begin{itemize}
+    \item Multiconjunto\smm{T} -  Es igual a un conjunto pero con duplicados. Cada elemento tiene asociada una multiplicidad,
+     que es la cantidad de veces que este aparece en la estrucutra. Tiene las mismas operaciones que un conjunto y ademas una que 
+     indica la multiplicidad del elemento.
+     \begin{tad}{Multiconjunto}
+         \obs{elems}{dict\smm{T,\nat}}
+         \begin{proc}{conjuntoVacio}{}{\nt}
+             \requiere{true}
+             \asegura{res.elems=\{\}}
+         \end{proc}
+         \begin{proc}{Nombre}{Parametros}{Resultado}
+             \requiere{true}
+             \asegura{true}
+         \end{proc}
+     \end{tad}
+\end{itemize}
 \end{document}
