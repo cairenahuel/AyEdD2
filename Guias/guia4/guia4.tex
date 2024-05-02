@@ -299,9 +299,184 @@ no necesariamente se agrega. ¿Comparar la cantidad que saco y el largo de la se
 \ejercicio{8}{Especifique el TAD contadores que, dada una lista de eventos, permite contar la cantidad de veces que se produjo cada uno de ellos.
 La lista de eventos es fija. El TAD debe tener una operacion para incrementar el contador asociado a un evento y una operacion para conocer 
 el valor actual del contador de dicho evento.\\
-\hspace*{2em}-Modifique el TAD para que sea posible guardar el valor del contador en un determinado momento del pasado. Si necesita conocer la fecha 
+\hspace*{2em}-Modifique el TAD para que sea posible preguntar el valor del contador en un determinado momento del pasado. Si necesita conocer la fecha 
 y hora actual puede pasarla como parametro a los procedimientos. Asuma que las dechas son numeros enteros (por ejemplo la cantidad de segundos desde el 1ro de enero del '70)}
 \begin{tad}{Contadores}
     \obs{elems}{dict\smm{T,\ent}}
+    \begin{proc}{nuevosContadores}{\In l: \TLista{T}}{\nt}
+        \requiere{true}
+        \asegura{|c.elems|=|l||}
+        \asegura{\forall e \in l: e\in res.elems \yLuego res[e]=0}
+    \end{proc}
+    \begin{proc}{aumentarContador}{\Inout c: \nt, \In k: T}{}
+        \requiere{c=C_0}
+        \requiere{k\in c.elems}
+        \asegura{|c.elems|=|C_0.elems|}
+        \asegura{\forall i\in c.elems: (i=k\yLuego c.elems[k]=C_0.elems[k]+1)\lor(i\not=k \yLuego c.elems[k]=C_0.elems[k])}
+    \end{proc}
+    \begin{proc}{numeroEventos}{\In c: \nt, \In k: T}{\ent}
+        \requiere{k\in c.elems}
+        \asegura{res=c.elems[k]}
+    \end{proc}
 \end{tad}
-\end{document}
+\pagebreak
+\\Contador con historial:
+{\color{yellow}
+\begin{tad}{ContadoresHistorial}
+    \obs{elems}{dict\smm{T,\ent}}
+    \obs{tiempo}{\ent}
+    \begin{proc}{nuevosContadores}{\In l: \TLista{T},\In fecha: \ent}{\nt}
+        \requiere{true}
+        \asegura{|c.elems|=|l||}
+        \asegura{\forall e \in l: e\in res.elems \yLuego res.elems[e]=0 \land res.tiempo=fecha}
+    \end{proc}
+    \begin{proc}{aumentarContador}{\Inout c: \nt, \In k: T, \In fecha: \ent}{}
+        \requiere{c=C_0}
+        \requiere{k\in c.elems}
+        \asegura{|c.elems|=|C_0.elems|}
+        \asegura{\forall i\in c.elems: (i=k\yLuego c.elems[k]=C_0.elems[k]+1 \land c.tiempo=fecha)\lor(i\not=k \yLuego c.elems[k]=C_0.elems[k])}
+    \end{proc}
+    \begin{proc}{numeroEventos}{\In c: \nt, \In k: T}{\ent}
+        \requiere{k\in c.elems}
+        \asegura{res=c.elems[k]}
+    \end{proc}
+\end{tad}}
+\\\rojo{- muy confuso, lo dejo para despues}
+\ejercicio{9}{Supongamos que queremos utilizar el TAD contador en un sistema que procesa millones de eventos por segundo
+y no damos abasto para procesar todos los eventos. Una posible solución es hacer sampling: en lugar de contar cada evento,
+contamos un porcentaje (conﬁgurable) de ellos, por ejemplo, un 1 \%. Es decir que de todas las llamadas al proc incrementar,
+sólo el 1 \% de ellas efectivamente incrementa el contador.}
+\rojo{En mi opinion es incorrecta porque no se deberia llamar a incrementar y ahi decir si se incrementa o no, en su lugar deberian
+ seleccionarse solo el 1\% de los eventos y que esos eventos llamen a incrementar.\\ 
+ Entonces lo que haria seria dejar la especificacion normal de incrementar y descartar los eventos antes.
+ Por ejemplo con un $\forall i \in \ent, 0\leq i, i mod 99=0$ (porque son millones por segundo, en otro caso no se como se haria.)
+ \\
+ \\
+ tl;dr: No sé}
+ \ejercicio{10}{Un caché es una capa de almacenamiento de datos de alta velocidad que almacena un subconjunto de datos,
+ normalmente transitorios, de modo que las solicitudes futuras de dichos datos se atienden con mayor rapidez que si se debe
+ acceder a los datos desde la ubicación de almacenamiento principal. El almacenamiento en caché permite reutilizar de forma
+ eﬁcaz los datos recuperados o procesados anteriormente.
+ Esta estructura comunmente tiene una interface de diccionario: guarda valores asociados a claves, con la diferencia de
+ que los datos almacenados en un cache pueden desaparecer en cualquier momento, en función de diferentes criterios.
+ Especiﬁcar caches genéricos (con claves de tipo K y valores de tipo V) que respeten las operaciones indicadas y las
+ siguientes políticas de borrado automático. Si necesita conocer la fecha y hora actual, puede pasarla como parámetro a los
+ procedimientos o bien puede asumir que existe una función externa horaActual() : Z que retorna la fecha y hora actual.
+ Asuma que las fechas son números enteros (por ejemplo, la cantidad de segundos desde el 1 de enero de 1970).}
+\begin{tad}{Cache\smm{K,V}}
+    \begin{proc}{esta}{\In c:\nt}{\bool}\end{proc}
+    \begin{proc}{obtener}{\In c:\nt, \In k: K}{V}\end{proc}
+    \begin{proc}{definir}{\Inout c:\nt, \In k: K}{V}\end{proc}
+\end{tad}
+\pagebreak\\
+Fifo o first-in-first-out
+\\El cache tiene una capacidad maxima. si se alcanza esa capacidad maxima se borra automaticamente la clave que fue definida por primera vez hace mas tiempo.
+{\color{olive}\begin{tad}{Cache\smm{K,V}}
+    \obs{elems}{struct\smm{dict:dict\smm{K,V}, tiempo:\ent}}
+    \obs{llena}{\bool}
+    \begin{proc}{esta}{\In c:\nt, \In k: K}{\bool}
+        \requiere{true}
+        \asegura{res=true \sii k\in c.elems_{dict}}
+    \end{proc}
+    \begin{proc}{obtener}{\In c:\nt, \In k: K}{V}
+        \requiere{k\in c.elems_{dict}}
+        \asegura{res=c.elems_{dict}[k]}
+    \end{proc}
+    \begin{proc}{definir}{\Inout c:\nt, \In k: K, \In v: V}{}
+        \requiere{c=C_0}
+        \asegura{(C_0.llena \yLuego (\exists e \in C_0.elems: e_{tiempo}=\\
+        \hspace*{7em}min(C_0.elems_{tiempo}) \yLuego c.elems_{dict} = setKey(delKey(c.elems_{dict},e)),k,v)))\lor_L\\
+        \hspace*{4.5em}(\lnot C_0.llena \yLuego setKey(c.elems_{dict}, k, v))}
+        \asegura{res.elems_{tiempo}=fechaActual()}
+    \end{proc}
+\end{tad}
+\\---------------Flashe una banda, mejor ni terminarlo y arrancar denuevo. 
+(Defini mal mi observador y solo tengo una fecha jdlksjf)}
+\begin{tad}{Cache\smm{K,V}}
+    \obs{datos}{dict\smm{K,struct\slr{valor: V,tiempo: \ent}}}
+    \obs{lleno}{\bool}
+    \begin{proc}{esta}{\In c:\nt, \In k: K}{\bool}
+        \asegura{res=true\sii k \in c.datos}
+    \end{proc}
+    \begin{proc}{obtener}{\In c:\nt, \In k: K}{V}
+        \requiere{k \in c.datos}
+        \asegura{res=c.datos[k]_{valor}}
+    \end{proc}
+    \begin{proc}{definir}{\Inout c:\nt, \In k: K, \In v: V}{}
+        \requiere{c=C_0}
+        \asegura{C_0.lleno\yLuego 
+        \exists e\in C_0.datos: (\forall e' \in C_0.datos: e_{tiempo} \leq e'_{tiempo})\yLuego\\
+         c.datos=setKey(delKey(C_0.datos,e),k,\slr{v, fechaActual()\ }\ )\ }
+        \asegura{\lnot C_0.lleno \yLuego c.datos=setKey(C_0.datos, k, \slr{v, fechaActual()\ }\ )\ }
+    \end{proc}
+\end{tad}
+LRU o last-recently-used
+\begin{tad}{Cache\smm{K,V}}
+    \obs{datos}{dict\smm{K,struct\slr{valor: V,tiempo: \ent}}}
+    \obs{lleno}{\bool}
+    \begin{proc}{esta}{\In c:\nt, \In k: K}{\bool}
+        \asegura{res=true\sii k \in c.datos}
+    \end{proc}
+    \begin{proc}{obtener}{\Inout c:\nt, \In k: K}{V}
+        \requiere{c=C_0}
+        \requiere{k \in C_0.datos}
+        \asegura{res=C_0.datos[k]_{valor}}
+        \asegura{c.datos[k]_{tiempo}=fechaActual()}
+    \end{proc}
+    \begin{proc}{definir}{\Inout c:\nt, \In k: K, \In v: V}{}
+        \requiere{c=C_0}
+        \asegura{C_0.lleno\yLuego 
+        \exists e\in C_0.datos: (\forall e' \in C_0.datos: e_{tiempo} \leq e'_{tiempo})\yLuego\\
+         c.datos=setKey(delKey(C_0.datos,e),k,\slr{v, fechaActual()\ }\ )\ }
+        \asegura{\lnot C_0.lleno \yLuego c.datos=setKey(C_0.datos, k, \slr{v, fechaActual()\ }\ )\ }
+    \end{proc}
+\end{tad}
+\anotacion{Entiendo el concepto del TTL pero no veo como aplicar algo que deberia ser automatico
+\\ a lenguaje especificacion. Sobre los primeros dos creo que estan bien ahora si.}
+\ejercicio{12}{Queremos modelar el funcionamiento de un vivero. El vivero arranca su actividad sin ninguna planta y con
+un monto inicial de dinero.
+Las plantas las compramos en un mayorista que nos vende la cantidad que deseemos pero solamente de a una especie
+por vez. Como vivimos en un país con inﬂación, cada vez que vamos a comprar tenemos un precio diferente para la misma
+planta. Para poder comprar plantas tenemos que tener suﬁciente dinero disponible, ya que el mayorista no acepta ﬁarnos.
+A cada planta le ponemos un precio de venta por unidad. Ese precio tenemos que poder cambiarlo todas las veces que
+necesitemos. Para simpliﬁcar el problema, asumimos que las plantas las vendemos de a un ejemplar (cada venta involucra
+un solo ejemplar de una única especie). Por supuesto que para poder hacer una venta tenemos que tener stock de esa planta
+y tenemos que haberle ﬁjado un precio previamente. Además, se quiere saber en todo momento cuál es el balance de caja,
+es decir, el dinero que tiene disponible el vivero.}
+\begin{tad}{vivero}
+    \obs{dinero}{\float}
+    \obs{plantas}{dict\smm{E,$\nat_0$}}
+    \obs{catalogo}{dict\smm{E,\float}}
+    \obs{preciosMayorista}{dict\smm{E,\float}}
+    \begin{proc}{comprarPlantas}{\Inout v: \nt, \In especie: E, \In cantidad: \nat}{}
+        \requiere{v=V_0}
+        \requiere{V_0.dinero>V_0.preciosMayorista[especie]*cantidad}
+        \asegura{especie\in V_0.plantas \yLuego v.plantas=setKey(V_0.plantas,especie,V_0.plantas[especie]+cantidad)}
+        \asegura{especie\not\in V_0.plantas \yLuego v.plantas=setKey(V_0.plantas,especie,cantidad)}
+        \asegura{v.dinero=V_0.dinero-V_0.preciosMayorista[especie]*cantidad}
+        \asegura{especie\in V_0.catalogo \yLuego\\\hspace*{4em}v.catalogo=setKey(V_0.catalogo, especie, max(V_0.catalogo[especie],V_0.preciosMayorista[especie]))}
+        \asegura{especie\not\in V_0.catalogo \yLuego v.catalogo=setKey(V_0.catalogo, especie, 0))}
+        \asegura{v.preciosMayorista>V_0.preciosMayorista}
+    \end{proc}
+    \begin{proc}{ponerPrecio}{\Inout v: \nt, \In especie: E, \In precio: \float}{}
+        \requiere{v=V_0}
+        \asegura{v.catalogo=setKey(V_0.catalogo,especie,precio)}
+        \asegura{v.preciosMayorista=V_0.preciosMayorista}
+        \asegura{v.plantas=V_0.plantas}
+        \asegura{v.dinero=V_0.dinero}
+    \end{proc}
+    \begin{proc}{venderPlanta}{\Inout v: \nt, \In especie: E}{}
+        \requiere{v=V_0}
+        \requiere{V_0.catalogo[especie]\not=0}
+        \requiere{V_0.plantas[especie]>0}
+        \asegura{v.dinero=V_0.dinero+V_0.catalogo[especie]}
+        \asegura{v.plantas=setKey(V_0.plantas,especie,V_0.plantas[especie]-1)}
+        \asegura{v.preciosMayorista=V_0.preciosMayorista}
+        \asegura{v.catalogo=V_0.catalogo}
+    \end{proc}
+    \begin{proc}{consultarCaja}{\In vivero: \nt}{\float}
+        \asegura{res=vivero.dinero}
+    \end{proc}
+    \anotacion{--- el resto de consultas son triviales}
+\end{tad}
+ \end{document}
