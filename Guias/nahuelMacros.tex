@@ -33,3 +33,9 @@
 %   y aca se pueden usar todos los procs y cosas de la catedra
 %
 %     \end{tad}
+\newcommand{\encabezadoImpl}[2]{\par\salto{1ex}\noindent \textbf{impl}\ \normalfont\ttfamily#1(#2)}
+\newcommand{\asg}[2]{\par\noindent{\ttfamily #1}:= #2\par}
+\newenvironment{impl}[2]{\encabezadoImpl{#1}{#2}\{
+\begin{adjustwidth}{3em}{0em}
+}
+{\end{adjustwidth}\par\}}
