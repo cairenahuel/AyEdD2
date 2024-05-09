@@ -1,0 +1,43 @@
+\documentclass[10pt, a4paper]{article}
+\input{../../nahuelMacros}
+\input{../../AEDmacros}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
+\begin{document}
+\begin{design}{ConjAcotadoArr\smm{T}}{ConjAcotado\smm{T}}
+    \var{datos}{Array\smm{T}}
+    \var{largo}{int}
+    \anotacion[red]{Invariante de representacion para sin repetidos}
+    \pred{invRep}{c: ConjAcotadoArr\smm{T}}{\paraTodo[unalinea]{i}{\ent}{0\leq i \leq c.largo \yLuego \#(c.datos[i],subseq(c.datos,0,c.largo)=1)}\land 0\leq c.largo<c.datos.length}
+    \anotacion[red]{Invariante de representacion para con repetidos}
+    \pred{invRep}{c: ConjAcotadoArr\smm{T}}{0\leq c.largo \leq c.datos.length}
+    \anotacion[red]{Abstraccion}
+    \pred{Abst}{c': ConjAcotadoArr\smm{T}, c: ConjAcotado\smm{T}}{
+        c.cap=c'.datos.length \land \paraTodo[unalinea]{e}{T}{e\in c.elems \sii \existe[unalinea]{p}{\ent}{0\leq p < c'.largo\yLuego c'.datos[p]=e}}
+    }
+    \anotacion[red]{algoritmos}
+    \begin{impl}{agregar}{\Inout c': ConjAcotadoArr\smm{T}, \In e: T}{}
+        \ifthel{c'.pertenece(e)}{\indent return \anotacionns[red]{(para terminar el programa basicamente)}}{\asgns{c.datos[c.largo]}{e}\par\asgns{c'.largo}{c'.largo+1}}
+        \\return
+    \end{impl}
+    \begin{impl}{sacar}{\Inout c: ConjAcotadoArr\smm{T}, \In e: T}{}
+        \ifthel{!c.pertenece(e)}{\indent skip}{\asgns{int i}{0}\\\indent{while c.elems[i]$\not=e$ do\\\indent\indent i++\\\indent end while}\\\indent\asgns{c.elems[i]}{c.elems[c.largo]}}
+        \\\asgns{c.largo}{c.largo-1}
+    \end{impl}
+    \begin{impl}{pertenece}{\Inout c: ConjAcotadoArr\smm{T}, \In e: T}{\bool}
+        \asgns{int i}{0}\\
+        while $i<c.elems.length$ do \begin{adjustwidth}{1em}{0em}\ifthel{$c.elems[i]=e$}{\indent return true}{skip}\\i++\\ end while\end{adjustwidth}
+        return false
+    \end{impl}
+    \while{hola}{hola2\while{hi}{things}}
+    \pagebreak
+    \ifthel{cosa}{hi}{bie}
+    \while{cosa}{hola\asg{qui}{sou}\ifthel{fiu}{fu}{fa}}
+\end{design}
+\anotacionns[blue]{\\¿Cual es mas eficiente, cuanto usarian una u otra?}
+\\En cuento a velocidad probablemente sea mas eficiente con repetidos, pero en cuanto a capacidad yo creo que
+sin repetidos es mas eficiente
+
+\end{document}

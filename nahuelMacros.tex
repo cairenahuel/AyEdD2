@@ -33,14 +33,22 @@
 %   y aca se pueden usar todos los procs y cosas de la catedra
 %
 %     \end{tad}
-\newcommand{\encabezadoImpl}[2]{\par\salto{1ex}\noindent \textbf{impl}\ \normalfont\ttfamily#1(#2)}
+\newcommand{\encabezadoImpl}[3]{\par\salto{1ex}\noindent \textbf{impl}\ \normalfont\ttfamily#1(#2):#3}
 \newcommand{\asg}[2]{\par\noindent{\ttfamily #1}:= #2\par}
-\newenvironment{impl}[2]{\encabezadoImpl{#1}{#2}\{
+\newcommand{\asgns}[2]{{\ttfamily #1}:= #2}
+\newenvironment{impl}[3]{\encabezadoImpl{#1}{#2}{#3}\{
 \begin{adjustwidth}{3em}{0em}
 }
 {\end{adjustwidth}\par\}}
-\newcommand{\encabezadoDesign}[2]{\par\salto{1ex}\noindent \textbf{Modulo}\ \normalfont\ttfamily #1 \ implementa\ #2}
+\newcommand{\encabezadoDesign}[2]{\par\salto{1ex}\noindent \textbf{modulo}\ {\normalfont\ttfamily #1} \textbf{implementa}{ \normalfont\ttfamily #2}}
 \newenvironment{design}[2]{\encabezadoDesign{#1}{#2}\{
+\newcommand{\var}[2]{\textbf{var} \texttt{##1}: \texttt{##2}\\}
 \begin{adjustwidth}{3em}{0em}
 }
 {\end{adjustwidth}\par\}}
+\newcommand{\ifthel}[3]{\salto{0em}\noindent\textbf{if}{ #1 }\textbf{then}\salto{0em}\noindent{\begin{adjustwidth}{1.5em}{0em}#2\end{adjustwidth}}\salto{0em}\noindent\textbf{else}\begin{adjustwidth}{1.5em}{0em}{#3}\end{adjustwidth}\salto{0em}\noindent\textbf{endif}}
+\newcommand{\while}[2]{
+    \salto{0em}\noindent
+    \textbf{while} #1 \textbf{do}
+    \begin{adjustwidth}{1.5em}{0em}{#2}\end{adjustwidth}\salto{0em}\noindent\textbf{end while}
+}
