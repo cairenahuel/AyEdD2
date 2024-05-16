@@ -1,0 +1,74 @@
+\documentclass[10pt,a4paper]{article}
+\input{../../nahuelMacros.tex}
+\input{../AEDmacros.tex}
+\begin{document}
+\ejercicio{1}{Quizas la forma mas simple de implementar un conjunto acotado sea mediante un array de tamaño fijo, utilizando la siguiente estructura:}
+\begin{design}{ConjAcotadoArr\smm{T}}{ConjAcotado\smm{T}}
+    \var{datos}{Array\smm{T}}
+    \var{largo}{int}
+\end{design}
+{\salto{0em}En la variable \emph{datos} guardaremos los elementos. Como el tamaño del arreglo es fijo, 
+necesitaremos otra variable, a la que llamaremos \emph{largo}, 
+que nos indique cuantas casillas del arreglo \emph{datos} estan siendo usadas.}
+{\par Con esta misma estrucutra tenemos dos opciones, permitir o no que haya repetidos.}
+\begin{itemize}
+    \item Escriba el invariante de representacion y la funcion de abstraccion para ambos casos.
+    \item ¿Cual es la mas eficiente? En que casos usaria cada una.
+    \item Escriba los algoritmos para las operaciones \emph{\bfseries agregar} un elemento y \emph{\bfseries sacar} un elemento para ambas versiones.
+    \item Respecto a la operacion sacar, piense en un algoritmo que no requiera generar un nuevo arreglo para reemplazar datos, sino que lo resuelva modificando alguna de sus posiciones.
+\end{itemize}
+\begin{design}{ConjAcotadoArr\smm{T}}{ConjAcotado\smm{T}}
+    \var{datos}{Array\smm{T}}
+    \var{largo}{int}
+    \anotacionns[blue]{Invariantes de representacion para con y sin repetidos respecticamente:}
+    \invrep{c: ConjAcotadoArr\smm{T}}{
+        $0\leq c.largo \leq c.datos.length$
+        }
+    \anotacionns[blue]{\\\small Acá tomo la decision de que los slots vacios de mi array sean los ultimos.}
+    \invrep{c: ConjAcotadoArr\smm{T}}{
+        $0\leq c.largo \leq c.datos.length \land \paraTodo[unalinea]{i,j}{\ent}{0\leq i,j < c.largo \yLuego c.datos[i]\not=c.datos[j]}$
+    }
+    \anotacionns[blue]{\\La funcion de abstraccion es la misma para ambos casos:}
+    \abs{c': ConjAcotadoArr\smm{T}, c: ConjAcotado\smm{T}}{
+        $c.cap=c'.array.length\yLuego \paraTodo[unalinea]{e}{T}{e\in c.elems \sii \existe[unalinea]{i}{\ent}{0\leq i <c'.largo \yLuego c'.data[i]=e}}$
+    }
+    \begin{impl}{agregar}{\Inout c: ConjAcotadoArr\smm{T},\In e: T}{}
+        \ifthel{$c.largo\geq c.datos.length$}{return}{\ifthel{$c.pertenece(e)$}{return}{\asg{c.datos[c.largo]}{e}}}
+    \end{impl}
+    \begin{impl}{agregar}{\Inout c: ConjAcotadoArr\smm{T},\In e: T}{}
+        \ifthel{c.largo<c.datos.length}{\asgns{c.datos[c.largo]}{e}}{skip}
+    \end{impl}
+    \pagebreak
+    \begin{impl}{sacar}{\Inout c: ConjAcotadoArr\smm{T},\In e: T}{}
+        \asgns{i}{0}
+        \while{c.datos[i]\not=e\ $\&\&\ $ i<c.datos.length}{i++}
+        \ifthel{c.datos[i]=e}{\asgns{c.datos[i]}{c.datos[c.largo]\\}
+        \asgns{c.largo}{c.largo-1}}{skip}
+    \end{impl}
+\end{design}
+\ejercicio{2}{¿Como implementaria una pila \emph{no acotada} utilizando arreglos?\\
+Escriba la estructura propuesta, su invariante de representacion, funcion de abstraccion y las operaciones \textbf{apilar} y \textbf{desapilar}}
+\begin{design}{PilaArray\smm{T}}{Pila\smm{T}}
+    \var{datos}{Array\smm{T}}
+    \var{usados}{int}
+\invrep{c': PilaArray\smm{T}}{
+    \anotacionns[blue]{No estoy seguro de necesitar un invariante de representacion.}
+}
+\abs{c': PilaArray\smm{T}, c: Pila\smm{T}}{
+    $c'.datos.length=c.s.length \land \paraTodo[unalinea]{i}{\ent}{0\leq i < c'.datos.length}$
+}
+\begin{impl}{apilar}{\Inout c: PilaArray\smm{T},\In e: T}{}
+    \ifthel{$c.usados\leq c.datos.length$}{
+        \ifthel{$c.usados < c.datos.length$}{\asgns{c.datos[c.usados]}{e}}{}
+    }{}
+\end{impl}
+\end{design}
+\begin{design}{Nombre}{Implementa}
+    \var{}{}
+\invrep{args}{cuerpo}
+\abs{args}{cuerpo}
+\begin{impl}{nombre}{args}{retorna}
+
+\end{impl}
+\end{design}  
+\end{document}

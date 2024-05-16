@@ -35,5 +35,21 @@
 			"\\end{tad}"
 		],
 		"description": "ALGO2 - Crea un nuevo ambiente de tad"
+	},	"Nuevo diseño":{
+		"scope":"latex",
+		"prefix":["diseño"],
+		"body":[
+			"\\begin{design}{Nombre}{Implementa}",
+			"    \\var{}{}",
+			"\\invrep{args}{cuerpo}",
+			"\\abs{args}{cuerpo}",
+			"\\end{design}"
+		],
+		"description": "ALGO2 - Crea un nuevo ambiente de diseño, MODULO algo IMPLEMENTA algo"
+	},
+		"Nueva Implementacion":{
+		"scope":"latex",
+		"prefix": "impl",
+		"body": ["\\begin{impl}{nombre}{args}{retorna}","","\\end{impl}"]
 	}
 }
