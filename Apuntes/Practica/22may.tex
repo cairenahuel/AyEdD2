@@ -1,0 +1,118 @@
+\documentclass[a4paper,10pt]{article}
+\include{../../nahuelMacros.tex}
+\include{../../Guias/AEDmacros.tex}
+\usepackage{algorithm2e}
+\begin{document}
+\paragraph*{Algoritmos sobre lostas simplemente enlazadas}
+\salto{\baselineskip}
+Nodo\smm{T} es Struct\smm{}
+T valor;
+\\Nodo siguiente;
+\begin{design}{ListaEnlazadaSimple\smm{T}}{Secuencia\smm{T}}
+    \var{primero}{NodoLista\smm{T}}
+    \var{ultimo}{NodoLista\smm{T}}
+    \var{longitud}{int}
+\invrep{args}{cuerpo}
+\abs{args}{cuerpo}
+\begin{impl}{pertenece}{\In lista: ListaEnlazadaSimple\smm{T},\In buscado: T}{\bool}
+    Nodo actual=primero;
+    \\int indice=0;
+    \\if longitud==0 then return false 
+    \while{longitud!=indice+1\&\&\ actual.valor\ !=buscado}{actual= actual.siguiente()\\i++}
+    \\return actual.value==T;
+    \anotacion[red]{acá medio que simplemente miraron que el nodo no sea null en vez de usar el indice, que bueno, no me convencio mucho asi que prefiero mi implementacion}
+\end{impl}
+\begin{impl}{obtener}{\In lista: ListaEnlazadaSimple\smm{T},\In buscado: T}{T}
+Nodo actual=primero
+\while{actual.valor!=T}{actual.siguiente}
+\\return actual.valor
+\end{impl}
+\begin{impl}{concat}{\Inout s1: ListaEnlazadaSimple\smm{T},\In s2: ListaEnlazadaSimple\smm{T}}{}
+    s1.ultimo.siguiente=s2.primero;
+    s1.ultimo=s2.ultimo;
+    s1.longitud+=s2.lingitud;
+    \anotacion[red]{acá hay que tener cuidado con el aliasing, en realidad lo idea es copiar toda l2 y concatenarle eso, para no correr peligro de que alguien despues modifique l2 y me cambie cosas que no quiere. Acá, como estamos en una materia de la facu, podemos decir que alguien imaginario se encargo de que lo que nos estan pasando ya es una copia.}
+\end{impl}
+\end{design}
+\paragraph*{Recursion} Vamos a hacer cosas simples sobre recorrer estrucutras, nada loco (como si se hacia en otras instancias de esta materia).
+\\ Estructura basica:
+\begin{itemize}
+    \item Caso base
+    \item Paso recursivo
+\end{itemize}
+\ejercicio{2}{Calculo del factorial de un entero positivo de forma recursiva.}
+\begin{impl}{factorial}{in n: N}{N}
+\ifthel{n!=1}{return n*factorial(n-1)}{return 1}
+\end{impl}
+\paragraph*{Arboles binarios}
+\begin{design}{NodoAB\smm{T}}{Nada}
+    \var{val}{T}
+    \var{izquierda}{NodoAB\smm{T}}
+    \var{derecha}{NodoAB\smm{T}}
+\end{design}
+\begin{design}{ArbolBinario\smm{T}}{ArbolBinario\smm{T}}
+    \var{raiz}{NodoAB\smm{T}}
+\invrep{args}{}
+\abs{args}{no lo hacemos :p}
+\begin{impl}{esVacio}{in ab: ArbolBinario\smm{T}}{\bool}
+    return ab.raiz==null;
+\end{impl}
+\end{design}
+\paragraph*{Como recorremos un arbol binario?} Recursivamente!
+\begin{impl}{cantidadDeNodos}{in ab}{nat}
+    \ifthel{esVacio(ab)}{return 0}{return 1+cantidadDeNodos(rama izquierda)+cantidadDeNodos(rama derecha)
+    \anotacion[red]{Acá no matchean bien los tipos, porque la funcion recibe un arbol binario pero le estamos pasando un nodo y bla bla, pero se entiende el concepto}}
+\end{impl}
+\ejercicio{3}{}
+\begin{itemize}
+    \item altura(in ab: ArbolBinario\smm{T}):int
+    \item está(in ab: ArbolBinario\smm{T}):bool
+\end{itemize}
+\begin{impl}{altura}{in ab: ArbolBinario\smm{T}}{int}
+\ifthel{esVacio(ab)}{return 1}{\ifthel{cantidadDeNodos(ab.izquierda)>=cantidadDeNodos(ab.derecha)}{return 1+altura(ab.izquierda)}{return 1+altura(ab.derecha)}}
+\end{impl}
+\begin{impl}{altura}{in ab: ArbolBinario\smm{T}}{int}
+    \ifthel{esVacio(ab)}{return 1}{
+    int cd = altura(ab.derecha)
+    \\int ci = altura(ab.izquierda)    
+    \ifthel{cd>=ci}{return 1+altura(ab.derecha)}{return 1+altura(ab.derecha)}}
+    \end{impl}
+\pagebreak
+\begin{impl}{esta}{in ab: ArbolBinario\smm{T}, int: T}{bool}
+    \ifthel{esVacio(ab)}{return false}{\ifthel{ab.valor=T}{return true}{esta(ab.izquierda)||esta(ab.derecha)}}
+\end{impl}
+\anotacion[violet]{\LARGE Resoluciones comunitarias \small(?)}
+\begin{impl}{altura}{in ab: ArbolBinario\smm{T}}{int}
+int res;
+\ifthel{estaVacio(ab)}{return 0}{res=1+max(ab.izquierda,ab.derecha)}
+
+\end{impl}\anotacion[red]{esto es $O(n)$ (no entiendo bien por que)}
+\begin{impl}{pertenece}{arbol y elemento}{bool}
+\ifthel{esVacio(arbol)}{return false}{\ifthel{arbol.raiz.valor==elemento}{return true}{return esta(arbol.raiz.izquierda)||esta(arbol.raiz.derecha)}}
+\end{impl}
+\anotacion[red]{Acá si estan usando bien la forma de acceder a los lugares, yo lo hice un poco a lo yolo, pero se entiende el punto me parece}
+\paragraph*{\Large Por si nos quedamos con ganas de mas...\\}
+{\large Rosetree} \\Árbol con cantidad arbitraria de hojas por nodo.\\
+Lista simplemente enlazada
+\\NodoRosetree\smm{T} es struct\smm{val: T, hijos: Array\smm{NodoRosetree} }
+\begin{design}{Rosetree}{Nada}
+    \var{raiz}{NodoRosetree\smm{T}
+    \\...}
+\invrep{}{cuerpo}
+\abs{args}{cuerpo}
+\end{design}
+\\Implementar
+\begin{itemize}
+    \item altura(in arbol: Rosetree\smm{T}):int
+    \item está(in arbol: Rosetree\smm{T}, in t: T): bool
+\end{itemize}
+NodoRosetree\smm{T} es struct\smm{val: T, hijos: Array\smm{NodoRosetree} }
+\begin{design}{Rosetree}{Nada}
+    \var{raiz}{NodoRosetree\smm{T}
+    \\...}
+\invrep{}{todos los nodos tienen un unico padre}
+\begin{impl}{altura}{arbol}{int}
+    
+\end{impl}
+\end{design}
+\end{document}

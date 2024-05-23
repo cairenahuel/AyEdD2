@@ -1,0 +1,102 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{tabularx}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{algorithm2e}
+\include{../Guias/AEDmacros.tex}
+\usepackage{graphicx}
+\graphicspath{./}
+\include{../nahuelMacros.tex}
+\begin{document}
+\paragraph*{Arboles}
+\begin{itemize}
+    \item Estructura de datos, ramas
+    \item Se puede definir recursivamente
+    \item Puede ser un unico elemento, la nada, o una estructura de multiples nodos de los cuales salen multiples ramas
+\end{itemize}
+Vamos a usar arboles binarios, con solo dos ramas por nodo que pueden o no ser vacias, pero tienen que estar definidas.
+(un poco invent eso de que tiene que estar definidas).
+\salto{\baselineskip}
+En general los arboles se definen en relacion a la cantidad de subarboles que pueden soportar, por ejemplo un arbol unario es una lista, un arbol binario soporta hasta dos subarboles, y asi.
+\paragraph*{Propiedades interesantes de los arboles}
+\begin{itemize}
+    \item Cantidad de nodos
+    \item Cuanto crecen vertical y horizontalmente
+\end{itemize}
+En haskell: (osea matematica y recursivamente)
+\begin{itemize}
+    \item altura(nil)=0
+    \item altura(\smm{n,i,d})=1+max\{altura i, altura d\}
+    \item elementos(nil)=[]
+    \item elementos(\smm{n,i,d})=[n] ++ elementos i ++ elementos d
+\end{itemize}
+Una implementacion del arbol binario se puede implementar de una forma similar a una lista doblemente enlazada, de la forma \emph{|puntero1|valor|puntero2|}\\
+Viendo a los arboles como tads, que operaciones deberia tener?
+\begin{tad}{ArbolBinario}
+    \obs{}{}
+    \begin{proc}{vacio}{Parametros}{Resultado}
+        \requiere{true}
+        \asegura{true}
+    \end{proc}
+    \begin{proc}{altura}{Parametros}{Resultado}
+        \requiere{true}
+        \asegura{true}
+    \end{proc}
+    \begin{proc}{bin}{Parametros}{Resultado}
+        \requiere{true}
+        \asegura{true}
+    \end{proc}
+    Como el tad de arbol binario no es muy util, directamente vamos a trabajar sobre la implementacion en nodos
+\end{tad}
+
+\paragraph*{Tipo especial de arbol: Arbol Binario de Busqueda} Para todo nodo, los valores de su subarbol izquierdo son menores que el valor del nodo y los valores del subarbol derecho son mayores.
+\begin{design}{ConjuntoConABB}{ArbolBinario}
+    \var{e}{ArbolBinario}
+\invrep{e}{esABB(e)=true}
+\abs{e}{c.elems=\{n:N | n in elementos(e.raiz)\}}
+\end{design}
+\anotacion[red]{\Large $\uparrow$ tomar con pinzas porque la slide tiene mas typos que otra cosa }
+La idea importante es la del principio, a la izquierda todos menores, a la derecha todos mayores, para cualquier nodo que agarre.
+\paragraph*{Algoritmos para Arbol de Busqueda Binario}
+\begin{itemize}
+    \item vacio
+    \item Busqueda
+    \item Insercion
+    \item Eliminar
+\end{itemize}
+Nodo = Struct \smm{dato: N, izq: Nodo, dar: Nodo} (opcionalmente un padre)
+\begin{design}{AB}{Conjunto}
+    \var{raiz}{Nodo}
+\invrep{args}{cuerpo}
+\abs{args}{cuerpo}
+\begin{impl}{vacio}{}{ABB}
+a= new ABB();
+\\a.raiz=null;
+\\return a;
+\end{impl}
+\begin{impl}{Busqueda}{a: ABB, k: N}{}
+    return busqueda(a.raiz, k)
+\end{impl}
+\begin{impl}{busqueda}{n,k}{nodo}
+    \ifthel{n==null || k==n.dato}{return n}{skip}
+    \ifthel{k<n.dato}{busqueda(n.izq, k)}{busqueda(n.der, k)}
+\end{impl}
+\begin{impl}{insercion\anotacionns[red]{\ mia}}{a: ABB, n: \nat}{ABB}
+    \ifthel{a.dato==n}{skip}{\ifthel{a.dato<n}{insercion(a.izq, n)}{insercion(a.der, n)}}
+\\a.dato=new Nodo(null,null,k)
+{\color{red}medio pelo quedo, esta mal}
+\end{impl}
+\pagebreak
+\begin{impl}{insercion}{inout a: ABB, k: \nat}{}
+    n=a.raiz\\
+    padre= raiz;
+    \while{a!=null}{
+        padre=n;
+        \ifthel{k<n.dato}{n = n.izq}{n = n.der}
+    }
+    newnodo= new Nodo(k, nil,nil, padre)
+    \ifthel{padre==null}{a.raiz=newnodo}{\ifthel{k<padre.dato}{padre.izq=newnodo}{padre.der=newnodo}}
+\end{impl}
+
+\end{design}
+\end{document}
