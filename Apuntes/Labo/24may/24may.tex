@@ -1,0 +1,37 @@
+\documentclass[a4paper,10pt]{article}
+\input{../../../nahuelMacros.tex}
+\input{../../../AEDmacros.tex}
+\begin{document}
+{{\LARGE Clase de Laboratorio:}\hfill {24 de Mayo}}\\
+Vamos a implementar conjuntos mediante de datos eficientes.
+Comlejidad de las estructuras implementadas hasta ahora:
+\begin{tabular}{c|c|c|c}
+&arregki red& lista enlazada & lista bi enlazada\\    
+pertenece & $O(logN)$ & $O(N)$ & $O(N)$ \\
+\hline\\
+insertar & $O(N)$ & $O(N)$ & $O(N)$ \\
+\hline\\
+borrar & $O(N)$ & $O(N)$ & $O(N)$ \\
+\hline\\
+max/min & $O(1)$ & $O(N)/O(1)$ & $O(N)/O(1)$ \\
+\end{tabular}
+\paragraph*{Arboles binarios:} Cada nodo un solo padre y hasta dos hijos, hijos a la izquierda menores y a la derecha mayores.
+\\Invariante de representacion de un arbol binario: 
+\invrep{arbol}{un objeto es ABB $\sii$ es null $\lor$ todos los nodos a la derecha son mayores y los de la izquierda son menores, y estos tambien son arboles de busqueda}
+\\El objetivo sera implementar un conjunto mediante arboles binarios de busqueda.
+\paragraph*{Algoritmos\\}
+\emph{abb.pertenece}
+\ifthel{raiz.valor==elemento}{return true}{\ifthel{elemento$<$raiz.valor}{raiz.izquierda.pertenece(elemento)}{raiz.derecha.pertenece(elemento)}}
+\\
+\\\emph{abb.insertar(elem)}
+Parecido al anterior
+\\(porque devuelve el ultimo nodo de la busqueda)
+\\Si lo encontramos no hacemos nada
+\\Si NO lo encontramos lo insertamos como hijo del ultimo nodo buscado
+\\
+\\\emph{eliminar}
+\\recorrer y si esta eliminarlo si no no hacerlo,
+\\si esta y tenemos que eliminarlo, si el nodo no tiene hijos lo eliminamos directamente.
+\\si tiene un unico elemento, enlazar el padre del nodo que queremos eliminar al hijo de este mismo.
+\\si tiene dos hijos, buscamos el mayor de los hijos menores, o el menor de los hijos mayores, y lo eliminamos y lo reemplazamos en lugar del padre
+\end{document}
