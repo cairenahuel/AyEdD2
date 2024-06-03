@@ -1,6 +1,7 @@
 \documentclass[a4paper,10pt]{article}
 \include{../../nahuelMacros}
 \include{../AEDmacros}
+\usepackage[svgnames]{xcolor}
 \begin{document}
 \ejercicio{1}{Implementamos el TAD secuencia sobre una lista simplemente enlazada usando:}
 \begin{design}{ListaEnlazada\smm{T}}{Secuencia\smm{T}}
@@ -30,10 +31,28 @@ Escriba los algoritmos para los siguientes procs y calcule su complejidad:
         \\ultimo:=null;
         \\longitud:=0;
     \end{impl}
+    \anotacion[ForestGreen]{//nodo tiene las variables nodo.valor (T) y nodo.siguiente (Nodo)}
     \begin{impl}{agregarAdelante}{\Inout l: ListaEnlazada\smm{T}, \In t: T}{}
-        nodo := nuevo Nodo
-        \\nodo.siguientes=primero
+        nodo $\leftarrow$ nuevo Nodo
+        \\nodo.siguiente=primero
+        \\nodo.valor=t
         \\primero=nodo;
+    \end{impl}
+    \begin{impl}{agregarAtras}{\Inout l: ListaEnlazada\smm{T}, \In t: T}{}
+        nodo $\leftarrow$ nuevo Nodo
+        \\nodo.siguiente=null
+        \\nodo.valor=t
+        \\ultimo.siguiente=nodo
+        \\ultimo=nodo
+    \end{impl}
+    \begin{impl}{eliminar}{\Inout l: ListaEnlazada\smm{T}, \In i:Int}{}
+        j=0
+        actual= primero
+        \while{j<i-1}{
+            actual=actual.siguiente
+            \\j++
+        }
+        actual.siguiente=actual.siguiente.siguiente;
     \end{impl}
 \end{design}
 \end{document}
