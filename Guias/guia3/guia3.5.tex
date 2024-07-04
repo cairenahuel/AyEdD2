@@ -1,0 +1,177 @@
+\documentclass[a4paper,10pt]{article}
+\include{../../AEDmacros}
+\include{../../nahuelMacros}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{microtype}
+\geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=5mm,
+    top=10mm,
+    }
+\graphicspath{{images/}}
+\begin{document}
+\includegraphics[width=\textwidth]{e1.png}
+a) La poscondicion del ciclo sera la misma que el \emph{asegura} de la especificacion, $res=\sum_{j=0}^{i-1}s[j]$
+
+La precondicion por otro lado no estoy seguro, sera que res=0 y i=0(las primeras dos lineas de S)?
+
+Could be
+
+b) de reemplazarse el primer termino del invariante este fallaria a la hora de mantenerse cierto al salir del ciclo
+
+Esto pues el while aumenta i en uno |s| veces, donde la |s|-ava vez no entra al ciclo y el programa termina.
+
+c) Deja de ser cierto durante toda la ejecucion del programa, basicamente te esta pidiendo que el termino que el programa esta por sumar ya este sumado a res
+
+d) Al llegar a la ultima iteracion se intentaria acceder a un elemento del arreglo que no existe?¿? creo
+
+f) \begin{itemize}
+    \item $Pc\implies I$
+
+          $res=0 \land i=0 \implies 0\leq i \leq |s| \land_L res=\sum_{j=0}^{i-1}s[j]$
+
+          $res=0 \land i=0 \implies 0\leq 0 \leq |s| \land_L 0=\sum_{j=0}^{1-1}$
+
+          $res=0 \land i=0 \implies true$
+
+    \item $\{I\land B\}S\{I\}$
+
+          {\color{blue}\{$0\leq i \leq |s| \land_L res=\sum_{j=0}^{i-1}s[j] \land i<|s|\}\equiv \{0\leq i < |s| \land_L res=\sum_{j=0}^{i-1}s[j]\}$}
+
+          res:= res + s[i]
+
+          i:=i+1
+
+          ${\color{blue}\{0\leq i \leq |s| \land_L res=\sum_{j=0}^{i-1}s[j]\}}$
+
+          Esto se traduce a comparar la primera parte de la tripla de Hoare con wp(res:=res+s[i]; i:=i+1, I)
+
+          ${\color{blue}\{0\leq i<|s| \land_L 0\leq i+1 \leq |s| \land_L res+s[i]=\sum_{j=0}^{i}s[j]\}}$
+
+          ${\color{blue}\equiv\{ 0\leq i<|s| \land_L -1\leq i \leq |s|-1 \land_L res=\sum_{j=0}^{i-1}s[j]\}}$
+
+          ${\color{blue}\equiv\{ 0\leq i < |s| \land_L res=\sum_{j=0}^{i-1}s[j]\}}$
+
+          Y podemos ver que ambos $I\land B$ y la wp calculada son iguales, por lo tanto la tripla de Hoare es correcta
+
+    \item $I \land \lnot B \implies Q_c$
+
+          $0\leq i \leq |s| \land_L res=\sum_{j=0}^{i-1}s[j] \land \lnot (i<|s|)$
+
+          $\equiv 0\leq i \leq |s| \land_L res=\sum_{j=0}^{i-1}s[j] \land i\geq|s|$
+
+          $\equiv i = |s| \land_L res=\sum_{j=0}^{i-1}s[j]$
+
+          $\equiv res=\sum_{j=0}^{|s|-1}s[j]$
+
+          Que es efectivamente nuestra postcondicion de la especificacion.
+\end{itemize}
+\pagebreak
+
+f)  Propuesta 1: $fv=|s|-i+1$
+
+\salto{\baselineskip}
+
+$\{I\land B \land v_0=fv\} res:=res+s[i];i:=i+1 \{fv<v_0\}\equiv Pc\implies wp(s,fv<v_0)$
+
+\salto{\baselineskip}
+
+$wp(S,fv<v_0)\equiv wp(res:=res+s[i], wp(i:=i+1, |s|-i+1<v_0))$
+
+cosas...
+
+\hspace*{2em}$\equiv |s|-(i+1)+1<v_0 \equiv |s|-i<v_0$
+
+\salto{\baselineskip}
+
+retomando el principio:
+
+$I\land B \land v_0=fv \implies |s|-i<v_0$?
+
+Si, pues $ v_o=fv \implies |s|-i<|s|-i+1$ que es trivialmente cierto.
+
+Ahora, mi propuesta cumple con el segundo statement?
+
+$I \land fv\leq 0 \implies \lnot B$
+
+$\alpha:\ |s|-i+1\leq 0 \implies |s|+1\leq i$
+
+$\beta:\ \lnot B \equiv i\geq |s| \equiv |s|\leq i\hspace*{5em} \longleftarrow $A lo que quiero llegar
+
+$I\equiv 0\leq i \leq |s| \land_L res=\sum_{j=0}^{i-1}s[j]$
+
+Tengo informacion de sobra, $\alpha \implies |s| \leq i \equiv \lnot B$
+
+Seems a bit too easy pero es el primer ejercicio de la guia so...
+
+
+\pagebreak
+
+
+\includegraphics[width=\textwidth]{e2.png}
+
+La precondicion del ciclo seria ...........................
+
+La poscondicion es $res=\sum_{j=0}^{n-1}if\ j\ mod 2 = 0\ then\ j\ else\ 0$
+
+$P\implies I$ es trivialmente cierto
+
+\salto{\baselineskip}
+
+$2^{da})$$\{I \land B \} res:=res+i; i:=i+2\{I\}$
+
+    \salto{\baselineskip}
+
+$I\equiv 0\leq i\leq n+1 \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$ {\small {\color{Violet}$\hfill \leftarrow$Por las dudas: Uso $\%$ en lugar de mod por cuestiones de spacing}}
+
+$B\equiv i<n$
+
+$wp(S,I)\equiv 0\leq i\leq n+1 \land i\%2=0 \land res+i=\sum_{j=0}^{i+1}if\ j\%2 = 0\ then\ j\ else\ 0$
+
+Analizando un poco nos damos cuenta de que i siempre sera par, por lo que i+1 es impar, entonces el termino i+1 de la sumatoria siempre sumara 0 (por el condicional), asi que podemos obviarlo. A su vez, podemos restar a ambos lados el termino i-esimo, que este sera par y por lo tanto si contara en la sumatoria, simplificando la expresion.
+
+$wp(S,I)\equiv 0\leq i\leq n+1 \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$
+
+Entonces, $I\land B \equiv 0\leq i<n \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$
+
+Que efectivamente implica mi wp, pues el segundo termino es identico y en el primero,
+
+$0\leq i<n\implies 0\leq i\leq n+1$
+
+\salto{\baselineskip}
+
+$3^{ra})\ I\land\lnot B\implies Q_c$
+
+$I\equiv 0\leq i\leq n+1 \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$
+
+$\lnot B\equiv i\geq n$
+
+$n\leq i \land i\leq n+1\equiv n\leq i\leq n+1$
+
+Pero i tiene que ser par, por lo que: $n\leq i\leq n+1\equiv n=i=n \equiv i=n$
+
+$i=n \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0 \equiv res=\sum_{j=0}^{n-1}if\ j\%2 = 0\ then\ j\ else\ 0 \equiv Q_c$
+
+Posible invariante: $n-i+1$
+
+$\{I\land B\land v_0=fv\} S \{fv<v_0\}$
+
+$wp(i:=i+2, n-i+1<v_0)\equiv n-i-1<v_0$
+
+entonces $v_0=fv \implies n-i-1<n-i+1$
+
+$5^{ta})\ I\land fv\leq 0 \implies \lnot B$
+
+Quiero entonces llegar a $\lnot B \equiv i\geq n$
+
+$fv\leq 0 \implies n+1\leq i$
+
+$I\implies 0\leq i\leq n+1$
+
+Estas dos cosas implican que $i=n+1$ que a su vez implica $i\geq n$
+
+De forma un poco confusa y poco organizada, pero queda entonces demostrada la correctitud del ciclo.
+\pagebreak
+\end{document}

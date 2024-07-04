@@ -4,6 +4,7 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocodex}
 \usepackage[svgnames]{xcolor}
+\usepackage[svgnames]{xcolor}
 \begin{document}
 \ejercicio{1}{Implementamos el TAD secuencia sobre una lista simplemente enlazada usando:}
 \begin{design}{ListaEnlazada\smm{T}}{Secuencia\smm{T}}
@@ -37,8 +38,9 @@ Escriba los algoritmos para los siguientes procs y calcule su complejidad:
     \anotacion[red]{Complejidad O(1)}
 
     \begin{impl}{agregarAdelante}{\Inout l: ListaEnlazada\smm{T}, \In t: T}{}
-        nodo := nuevo Nodo
-        \\nodo.siguientes=primero
+        nodo $\leftarrow$ nuevo Nodo
+        \\nodo.siguiente=primero
+        \\nodo.valor=t
         \\primero=nodo;
     \end{impl}
 
