@@ -1,0 +1,39 @@
+\documentclass[a4paper,10pt]{article}
+\input{../../nahuelMacros.tex}
+\input{../../AEDmacros.tex}
+
+\begin{document}
+\large
+\paragraph*{Heaps} Es un arbol binario siempre completo, se puede representar los heaps como un array, y tenemos ciertas relaciones para ello.
+\salto{\baselineskip}
+Para todo nodo en la posicion i del array:
+\begin{enumerate}
+    \item El padre esta en $\frac{i-1}{2}$
+    \item El hijo izquierdo esta en $2\cdot i +1$
+    \item El hijo derecho esta en $2\cdot i + 2$
+\end{enumerate}
+El array tiene un arreglo fijo, entonces nos sirve para esta implementacion? No. Pero podemos usar un vector, que es basicamente lo mismo pero se puede agrandar y achicar.
+\\\paragraph*{Operaciones}
+\begin{enumerate}
+    \item ConsultarMax con costo O(1)
+    \item DesencolarMax con costo O($log(n)$)
+    \item Encolar con costo O($log(n)$)
+\end{enumerate}
+\paragraph*{Para pensar:\\}
+¿Que costo tendra buscar un elemento que no sea el maximo?
+\\{\color{ForestGreen}Nahuel: Yyyyy, ¿lineal? porque tenes que revisar linea a linea}
+\\¿Como cambio la prioridad de un elemento?
+\\{\color{ForestGreen}Nahuel: Tiene sentido? tenes que cambiar el valor para que sea mayor que su padre e intercambiarlos}
+\salto{\baselineskip}
+{\LARGE colgue mal}
+Podemos usar tuplas como valores de los nodos del heap, en los cuales una de las posiciones es un numero y el otro el valor propiamente dicho, entonces todos nuestros algoritmos se mantienen y solo tenemos que comparar la posicion de la tupla que corresponda.
+\paragraph*{Ejercicios:\\}
+\ejercicio{9}{¿Como harian para implementar una ColaDePrioridad ordenada por dos criterios? Por ejemplo, se quiere tener una cola de personas donde el criterio de ordenamiento es por edad y, en caso de empate, por sexo?}
+Y en caso de empate simplemente los compararia por el segundo criterio y uno quedaria arriba y el otro debajo, o soy tonto?
+\ejercicio{10}{¿Como utilizaria un heap para ordenar una secuencia de elementos? Escriba el algoritmo y calcule su complejidad}
+creo un heap vacio
+\\le inserto el primer elemento
+\\while (haya proximo elemento)
+\\  el elemento es mayor al maximo del heap? -> si lo es, este es el nuevo maximo de heap.
+\\  es menor? 
+\end{document}
