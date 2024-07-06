@@ -4,10 +4,12 @@
 \usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
 \usepackage{microtype}
+\usepackage[spanish]{babel}
 \geometry{
     a4paper,
     total={170mm,257mm},
     left=5mm,
+    right=20mm,
     top=10mm,
     }
 \graphicspath{{images/}}
@@ -130,17 +132,17 @@ $B\equiv i<n$
 
 $wp(S,I)\equiv 0\leq i\leq n+1 \land i\%2=0 \land res+i=\sum_{j=0}^{i+1}if\ j\%2 = 0\ then\ j\ else\ 0$
 
-Analizando un poco nos damos cuenta de que i siempre sera par, por lo que i+1 es impar, entonces el termino i+1 de la sumatoria siempre sumara 0 (por el condicional), asi que podemos obviarlo. A su vez, podemos restar a ambos lados el termino i-esimo, que este sera par y por lo tanto si contara en la sumatoria, simplificando la expresion.
+    Analizando un poco nos damos cuenta de que i siempre sera par, por lo que i+1 es impar, entonces el termino i+1 de la sumatoria siempre sumara 0 (por el condicional), asi que podemos obviarlo. A su vez, podemos restar a ambos lados el termino i-esimo, que este sera par y por lo tanto si contara en la sumatoria, simplificando la expresion.
 
 $wp(S,I)\equiv 0\leq i\leq n+1 \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$
 
-Entonces, $I\land B \equiv 0\leq i<n \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$
+    Entonces, $I\land B \equiv 0\leq i<n \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0$
 
-Que efectivamente implica mi wp, pues el segundo termino es identico y en el primero,
+    Que efectivamente implica mi wp, pues el segundo termino es identico y en el primero,
 
 $0\leq i<n\implies 0\leq i\leq n+1$
 
-\salto{\baselineskip}
+    \salto{\baselineskip}
 
 $3^{ra})\ I\land\lnot B\implies Q_c$
 
@@ -150,28 +152,275 @@ $\lnot B\equiv i\geq n$
 
 $n\leq i \land i\leq n+1\equiv n\leq i\leq n+1$
 
-Pero i tiene que ser par, por lo que: $n\leq i\leq n+1\equiv n=i=n \equiv i=n$
+    Pero i tiene que ser par, por lo que: $n\leq i\leq n+1\equiv n=i=n \equiv i=n$
 
 $i=n \land i\%2=0 \land res=\sum_{j=0}^{i-1}if\ j\%2 = 0\ then\ j\ else\ 0 \equiv res=\sum_{j=0}^{n-1}if\ j\%2 = 0\ then\ j\ else\ 0 \equiv Q_c$
 
-Posible invariante: $n-i+1$
+    Posible invariante: $n-i+1$
 
 $\{I\land B\land v_0=fv\} S \{fv<v_0\}$
 
 $wp(i:=i+2, n-i+1<v_0)\equiv n-i-1<v_0$
 
-entonces $v_0=fv \implies n-i-1<n-i+1$
+    entonces $v_0=fv \implies n-i-1<n-i+1$
 
 $5^{ta})\ I\land fv\leq 0 \implies \lnot B$
 
-Quiero entonces llegar a $\lnot B \equiv i\geq n$
+    Quiero entonces llegar a $\lnot B \equiv i\geq n$
 
 $fv\leq 0 \implies n+1\leq i$
 
 $I\implies 0\leq i\leq n+1$
 
-Estas dos cosas implican que $i=n+1$ que a su vez implica $i\geq n$
+    Estas dos cosas implican que $i=n+1$ que a su vez implica $i\geq n$
 
-De forma un poco confusa y poco organizada, pero queda entonces demostrada la correctitud del ciclo.
-\pagebreak
+    De forma un poco confusa y poco organizada, pero queda entonces demostrada la correctitud del ciclo.
+
+    \pagebreak
+
+    \includegraphics*[width=\textwidth]{./e3.png}
+
+    while i<=n do
+
+    if n mod i == 0 then
+
+    res:=res+i
+
+    i:=i+1
+
+$P_c\equiv i=0 \land res=0$
+
+$Q_c \equiv Q \equiv res=\sum_{j=1}^{n}\ if\ n\%j=0\ then\ j\ else\ 0$
+
+    Propuesta de invariante:
+
+$I\equiv 0\leq i\leq n+1 \land res=\sum_{j=1}^{i}\ if\ n\%j=0\ then\ j\ else\ 0$
+
+    c) habria que cambiar la guarda del while, la pre y la post condicion no cambian.
+
+    \pagebreak
+
+    \includegraphics*[width=\textwidth]{e4.png}
+
+    a) Todas?¿?¿ i, s y r
+
+    b)
+
+$I\equiv{\color{blue} 0\leq i \leq |s|}\land {\color{Red}|s|=|r|} \land \paraTodo[unalinea]{j}{\ent}{0\leq j < i \land r[j]=s[j]}$
+
+    Lo rojo y azul es necesario para $P_c\implies I$
+
+    Azul y negro para $\{B\land I\}S\{I\}$
+
+    Denuevo, azul y negro para $I\land \lnot B \implies Q_c$
+
+    c) fv=|s|-i
+
+    d)
+
+    \includegraphics*[width=0.5\textwidth]{solE4.png}
+
+    Bueno no hacia falta lo rojo parece, fair enough
+
+    \pagebreak
+
+    \includegraphics*[width=\textwidth]{e5.png}
+
+    Idealmente en papel haria un par de iteraciones del programa para identificar correctamente que es lo que hace, honestamente acá podria hacer una tabla y bla bla pero me da paja. Y ademas me parece que simplemente lo que hace es, de forma enrevesada, solo sumar la primera mitad de un arreglo de longitud par.
+
+    Entonces mi propuesta de invariante es:
+
+$I\equiv \frac{|s|}{2}-1\leq i \leq |s|-1 \land suma=\sum_{j=0}^{|s|-2-i}s[j]$
+
+    Y mi propuesta de funcion variante es
+$f_v=|s|/2-1-i$
+
+    \includegraphics*[width=0.5\textwidth]{solE5.png}
+
+    Ahora viendo la solucion me doy cuenta de que claro, como i esta "decreciendo" tengo que invertir los signos a como lo hago normalmente, porque asi como lo hice no se cumple que al finalizar el ciclo mi fv sea menor o igual a cero
+
+    \pagebreak
+
+    El seis me da paja, asi que va el siete.
+
+    \includegraphics*[width=\textwidth]{e7.png}
+
+    ----------------------------------------------------------------
+
+    i:=0
+
+    while $i<s.len()$ do
+
+    \hspace*{3em}if $i\%2=0$ then
+
+    \hspace*{6em}s[j]:=i*2
+
+    \hspace*{3em}else
+
+    \hspace*{6em}s[j]:=i*2+1
+
+    ----------------------------------------------------------------
+
+$P_c\equiv i=0$
+
+$B\equiv i<s.len()$
+
+$Q_c\equiv \paraTodo[unalinea]{i}{\ent}{0\leq i < |s| \land_L (i\%2=0 \land s[i]=2*i)\lor (i\%2\not=0 \land s[i]=i*2+1)}$
+
+$fv=|s|-i$
+
+    raro que no pida demostrar nada, quizas si me queda tiempo antes del recu intento hacerlo por los loles
+
+    \pagebreak
+
+    \includegraphics*[width=\textwidth]{e8.png}
+
+    Aparentemente pone todo en cero desde el principio y el final no?
+
+    Me parece raro que no tenga como requiere que la longitud de s sea par
+
+    \rule{\textwidth}{0.5pt}
+
+    i:=0
+
+    while $i<|s|/2$
+
+    \hspace*{3em}s[i]:=0
+
+    \hspace*{3em}s[|s|-i-1]:=0
+
+    \hspace*{3em}i:=i+1
+
+    \rule{\textwidth}{0.5pt}
+
+$P_c\equiv i=0 \land {\color{red}|s|\%2=0?}$
+
+$B\equiv i<|s|/2$
+
+$Q_c\equiv \paraTodo[unalinea]{i}{\ent}{0\leq i < |s| \land_L s[i]=0\land s[|s|-i-1]=0} $
+
+    {\color{red}Puede ser que no haga falta lo de que sea par ya que de ultima si i y |s|-i-1 apuntan al mismo slot del array igualmente es valido porque ambos solo requieren que este sea igual a cero}
+
+$fv=|s|/2 -i$
+
+    \includegraphics*[width=\textwidth]{e9.png}
+    {
+        Estos dos predicados pareciera que hacen referencia a un i creciente, la duda que me surge es como determinar k (¿hace falta determinarlo?).
+
+        Comparandolo con el predicado que usamos nosotros, que usa el signo invertido y k igual a cero, parece innecesariamente mas complejo, aunque imagino que es valido igualmente.
+
+        Por ejemplo cuando recorres los indices de una lista, k seria |s| no? Es realmente tanto mas complejo entonces?
+
+        Se me hace que k siempre seria esa primera parte que le pongo al invariante, a la que basicamente le resto i de alguna forma mas o menos compleja.
+
+        Esto haria entonces que fv sea simplemente i (y sus cosas extra), y de hecho esto tiene sentido porque
+
+        $fv=i\land k=|s| \implies fv\geq k \equiv i\geq |s| \equiv i-|s|\geq 0 \equiv |s|-i<0$
+
+        Not quite there :/
+
+        tl;dr: ni idea, creo que si pero no se como fundamentar mi respuesta, parece una generalizacion del predicado que usamos.
+    }
+
+    \pagebreak
+
+    \includegraphics*[width=\textwidth]{e10.png}
+
+    Habria que comenzar viendo cual es la Q principal, osea la de la especificacion, a la que llamare $Q_e$
+
+$Q_e\equiv res=true \sii \existe[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]=e}$
+
+    Ahora de forma secuencial puedo comenzar a calcular las wp por linea/instruccion
+
+    \begin{align*}
+        wp(\text{if $j!=1$ then $res:=true$ else $res:=false$}, Q_e)\equiv & def(b)\land_L (j\not= -1\land Q_{true}^{res}) \lor (j=-1 \land Q_{false}^{res})            \\
+        \equiv                                                             & (j\not=-1 \land true=true \sii \existe[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]=e})   \\
+                                                                           & \lor (j=-1 \land false=true \sii \existe[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]=e}) \\
+        \# 1\equiv                                                         & (j\not=-1 \land \existe[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]=e})                  \\
+                                                                           & \lor (j=-1 \land \paraTodo[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]\not=e}
+        )
+    \end{align*}
+    \#1) Acá es confuso, dado que \emph{q sii p} es una expresion que es verdadera si q y p son falsos o verdaderos simultaneamente, creo que puedo reducirlo a lo escrito dado que
+    \begin{multline*}
+        \\q \sii p \equiv q\implies p \land p \implies q
+        \\\text{si }q=true
+        \\true \implies p \land p \implies true
+        \\p \land p
+        \\p
+        \\\text{si }q=false
+        \\false \implies p \land p \implies false
+        \\true \land \lnot p
+        \\\lnot p
+        \\
+    \end{multline*}
+
+    Voy a llamar a esta postcondicion $Q_i$ por ser la wp de mi $Q_e$ y el if exterior.
+
+$Q_i\equiv (j\not=-1 \land \existe[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]=e})
+\lor (j=-1 \land \paraTodo[unalinea]{k}{\ent}{0\leq k < |s| \land_L s[k]\not=e})$
+
+    Justo tambien es la postcondicion de mi ciclo, asi que ahora tengo que demostrar la correctitud del ciclo
+
+$P_c\equiv i=0 \land j=-1$
+
+$B_c\equiv i<|s|$
+
+$S\equiv \text{if s[i]=e then j:=i else skip};i:=i+1$
+
+    Propuesta de invariante:
+
+$I\equiv 0\leq i \leq |s| \land -1\leq j< |s|$
+
+    ¿$P_c\implies I$?
+
+$i=0 \land j=-1 \implies I\equiv 0\leq i \leq |s| \land -1\leq j< |s| \hfill \blacksquare$
+
+\vbox{
+
+¿$\{I\land B\}S\{I\}$?
+
+Esto equivale a ver si $I\land B \implies wp(S,I)$, asi que comienzo calculando dicha wp
+
+$wp(i:=i+1, I) \equiv 0\leq i+1 \leq |s| \land -1\leq j< |s|$
+
+$wp(i:=i+1, I) \equiv -1 \leq i \leq |s|-1 \land -1\leq j< |s|$
+
+Ahora con el if:
+
+$wp(\text{if s[i]=e then  j:=i else skip},wp(i:=i+1, I))\equiv def(B) \land ((B \land Q_i^j) \lor (\lnot B \land ¿true?))$
+
+$0\leq i < |s| \land_L ((s[i]=e \land -1 \leq i \leq |s|-1 \land -1\leq i < |s|)\lor s[i]\not=e)$
+
+$0\leq i < |s| \land_L (s[i]=e \lor s[i]\not=e)$
+
+$0\leq i < |s|$
+
+Se siente raro
+
+$I\land B \implies 0\leq i < |s| \hfill \blacksquare?$
+
+¿$I\land \lnot B \implies Q_i$?
+
+Esto es medio raro de demostrar, no se si se puede de hecho. 
+Siento que I y no B no me dan suficiente informacion sobre la postcondicion,
+o es que estoy en una situacion de algo pseudo true implies whatever?
+estoy en una situacion de true implies p o no p? parece no?
+Asumo entonces que estoy en lo correcto y que la desmotracion es valida (?)
+
+Una posible funcion variante es: $fv=|s|-i$
+
+$\{I\land B\land fv=v_0\}S{fv<v_0}$
+
+Trivialmente cierto pues i crece en cada iteracion.
+
+¿$I\land fv\leq 0 \implies \lnot B$?
+
+$I\land fv\leq 0 \equiv 0\leq i \leq |s| \land |s|-i\leq 0 $
+
+$0\leq i \leq |s| \land |s|-1\leq i \equiv |s|\leq i \leq |s| \implies i\geq|s| \equiv \lnot B\hfill\blacksquare$
+
+Muy dudoso todo pero tengo sueño y hambre y es tarde y no quiero saber mas nada de esto. Mañana sera otro dia.
+
+}
+
 \end{document}
